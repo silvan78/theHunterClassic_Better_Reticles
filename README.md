@@ -17,7 +17,7 @@ Structure:<br />
 <li>Enter Configuration, setup non-conflicting keybind for enabling/disabling overlay. (ie. Alt+/)
 <li>Precompile Range Card for the hunt. Play Claw restricts TXT to 8 lines and 40 chars.
 <li>Enter Plugin setup, Image overlay. Browse and choose reticle of your choosing with option (Fully visible, stretch).
-<li>If using advanced overlay, one can add Range card as Text overlay. Pick Text overlay, tick Text file, choose compiled range card with calibres for this hunt. Set font to Consola 11.
+<li>When using advanced overlay (Universal Reticle), one can add Range card as Text overlay. Pick Text overlay, tick Text file, choose compiled range card with calibres for this hunt. Set font to Consola 11.
 <li>Enter Preview overlays and stretch Image overlay field to fit whole screen. Also setup Text overlay so it does not overlap with reticle field (ie. left top quarter).</li>
 <li>Enter the game. The overlay will be already visible in the Launcher dashboard. Disable overlay with hotkey and setup the game.
 <li>NOTE: Then swithing to/from game (ie. to change reticle) remember to disable overlay. Game gets unstable otherwise.
