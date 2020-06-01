@@ -257,6 +257,7 @@ Options:
 
 Example:
         range_card_parser -c "S1/.17HMR" "C1/CroPis"
+        range_card_parser -c "S1/.17HMR" "C1/CroPis" "M1/6.5x55" -rl 150,200,300 -rs 20,40,60
 
 XXX
 
