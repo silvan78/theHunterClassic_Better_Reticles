@@ -17,11 +17,11 @@ Legend
 (Optics/WeaponIndex)
 .17HMR/HMRHV    A 3-9x40 Anshutz, S 12x56,                       1 LA
 .22 Gra         P 2-6x32 Handgun Scope,                          1 .22 Grasshopper Pistol
-.223            L 5-22x56,                                       1 Bolt Action (BA), 2 Ar15
+.223            L 5-22x56, M 2-10x42                             1 Bolt Action (BA), 2 Ar15
 .243            M 2-10x42,                                       1 BA
 6.5x55          M 2-10x42,                                       1 BA
 .270            M 2-10x42,                                       1 BA
-7mmHP/HV        L 5-22x56,                                       1 - Scout
+7mmHP/HV        L 5-22x56,                                       1 Steyer Scout
 .30-06          M 4-8x32,                                        1 20.06 LA Rifle
 .300WM          L 5-22x56,                                       1 BA
 8x57            L 5-22x56,                                       1 Anshutz 1760 IS
