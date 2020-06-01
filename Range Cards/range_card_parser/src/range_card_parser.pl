@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+
 use POSIX qw(strftime);
 
 my $today = strftime"%Y%m%d", localtime;
@@ -8,9 +9,9 @@ my %lib_name=();
 my %lib_correction=();
 
 # Defaults
-$setup{'library'} = '../../Universal Reticle MRAD.txt';
-$setup{'library_legend'} = '../../Universal Reticle MRAD legend.txt';
-$setup{'output_file'} = '../../hunt/range_card.txt';
+$setup{'library'} = 'Universal Reticle MRAD.txt';
+$setup{'library_legend'} = 'Universal Reticle MRAD legend.txt';
+$setup{'output_file'} = 'hunt/range_card.txt';
 $setup{'item_list'} = [];
 $setup{'range_list_long'} = [150,175,200,225,250,275,300,325];
 $setup{'range_list_short'} = [10,20,30,40,50,60,80,100];
@@ -23,6 +24,14 @@ if ($#ARGV < 0) {
 }
 
 GetArgs();
+if ($#{$setup{'item_list'}} == -1) {
+    print "ERROR: Empty item list. Exiting.";
+    exit(1);
+}
+if ((!defined $setup{'library'}) and (!defined $setup{'library_legend'})) {
+    print "ERROR: library and/ot library legend file not defined. Exiting.";
+    exit(1);
+}
 
 #print "ITEMS: ",join(',',@{$setup{'item_list'}}),"\n";
 #print "LONG: ",join('-',@{$setup{'range_list_long'}}),"\n";
@@ -239,14 +248,14 @@ sub GetArgs {
 
 sub PrintHelp {
     print << "XXX";
-range_card_parser <options> <optics/weapon list>
+range_card_parser[.exe|.pl] <options> -c <optics/weapon list>
 
-Program parses library range card into smaller range card file for specific hunt.
-By default data form Universal Reticle MRAD.txt are cut into hunt/range_card.txt
-file.
+Program parses library range card into smaller hunt-specific range card.
+By default data form Range Cards/Universal Reticle MRAD.txt are cut into
+Range Cards/hunt/range_card.txt file.
 
 Options:
-        -c : Calibre/optics items for hunt
+        -c : Calibre/optics/weapon index items for hunt
         -i : Range Card library file [Universal Reticle MRAD.txt]
         -ii: Range Card library legend file [Universal Reticle MRAD legend.txt]
         -o : Output range card file [hunt/range_card.txt]
@@ -256,8 +265,8 @@ Options:
         -h : This help
 
 Example:
-        range_card_parser -c "S1/.17HMR" "C1/CroPis"
-        range_card_parser -c "S1/.17HMR" "C1/CroPis" "M1/6.5x55" -rl 150,200,300 -rs 20,40,60
+        range_card_parser[.exe|.pl] -c "S1/.17HMR" "C1/CroPis"
+        range_card_parser[.exe|.pl] -c "S1/.17HMR" "C1/CroPis" "M1/6.5x55" -rl 150,200,300 -rs 20,40,60
 
 XXX
 
