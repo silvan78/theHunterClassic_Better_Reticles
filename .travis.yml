@@ -11,7 +11,7 @@ script:
 # Library reading
   - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
 # Range Card Generation Simulation and comparison with test file (1st line not included)
-  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legen d.txt -s|tail -n 8| diff - ./Range\ Cards/range_card_parser/test/range_card_test.txt
+  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/range_card_parser/test/range_card_test.txt
 
 
 
