@@ -1,8 +1,10 @@
 #!/usr/bin/perl
 
-$version="1.0";
-
+use warnings;
+use strict;
 use POSIX qw(strftime);
+
+my $version="1.01";
 
 my $today = strftime"%Y%m%d", localtime;
 my %setup=();
@@ -21,42 +23,19 @@ $setup{'output_file'} = 'hunt/range_card.txt';
 $setup{'item_list'} = [];
 $setup{'range_list_long'} = [150,175,200,225,250,275,300,325];
 $setup{'range_list_short'} = [10,20,30,40,50,60,80,100];
+$setup{'simulate'}=0;
+$setup{'printlegend'}=0;
 
 if ($#ARGV < 0) {
     print "ERROR: No argument given. Exiting.\n\n";
     PrintHelp();
-    PrintLibrary();
+    PrintLibraryLegend();
     exit(1);
 }
 
 GetArgs();
-if ($#{$setup{'item_list'}} == -1) {
-    print "ERROR: Empty item list. Exiting.";
-    exit(1);
-}
-if ((!defined $setup{'library'}) and (!defined $setup{'library_legend'})) {
-    print "ERROR: library and/ot library legend file not defined. Exiting.";
-    exit(1);
-}
 
-#print "ITEMS: ",join(',',@{$setup{'item_list'}}),"\n";
-#print "LONG: ",join('-',@{$setup{'range_list_long'}}),"\n";
-#print "SHORT: ",join('-',@{$setup{'range_list_short'}}),"\n";
-
-ReadLibrary();
-
-#print "LIBRARY NAMES: ",join(',',sort keys %lib_name),"\n";
-#
-#print "LIBRARY RANGES: \n";
-
-#foreach $tmp (sort keys %lib_correction) {
-#    print "$tmp";
-#    foreach $tmpX (sort keys %{$lib_correction{$tmp}}) {
-#        print " $tmpX $lib_correction{$tmp}{$tmpX}";
-#    }
-#    print "\n";
-#}
-#print "<",ItemCode("C1/TENPOINT"),">\n<",FormatName(ItemName("C1/TENPOINT")),">\n[",FormatCorrection($lib_correction{"C1/TENPOINT"}{'10'}),"]\n";
+# Read Library data into %lib_names and %lib_correction
 
 # Define Long Range Items
 my @LongRangeItems=();
@@ -79,10 +58,7 @@ foreach $item (@{$setup{'item_list'}}) {
     }
 }
 
-# Printing range card
-open (OUT,">$setup{'output_file'}") or die "ERROR: Cannot write to output file ($setup{'output_file'}. Exiting.";
-print {OUT} "Universal Reticle MRAD Range Card $today\n\n";
-
+# Preparing range card print
 @LongRangeLines=();
 @ShortRangeLines=();
 push(@LongRangeLines,"     ");
@@ -120,7 +96,7 @@ foreach $item (@ShortRangeItems) {
     }
 }
 
-#deciding which has more lines
+# Deciding which has more lines (to fill with appropriate number of space shorter output)
 my $filler;
 if ($#LongRangeLines > $#ShortRangeLines) {
     $filler=sprintf("%*s",length($ShortRangeLines[3]),"");
@@ -134,13 +110,23 @@ if ($#LongRangeLines > $#ShortRangeLines) {
     }
 }
 
-#joining output
+#joining output and printing
+my $out;
+if ($setup{'simulate'} == 0) {
+    open $out,">",$setup{'output_file'} or die "ERROR: Cannot write to output file ($setup{'output_file'}. Exiting.";
+ } else {
+     open $out,">&",\*STDOUT or die "ERROR: Cannot write to STDOUT. Exiting.";
+}
+print {$out} "Universal Reticle MRAD Range Card $today\n\n";
 foreach $z (0..$#LongRangeLines){
-    print {OUT} "$LongRangeLines[$z]    $ShortRangeLines[$z]\n"
+    print {$out} "$LongRangeLines[$z]    $ShortRangeLines[$z]\n"
 }
 
 
+
+#######
 # Subs
+#######
 sub FormatRangeLong {
     return sprintf("%4d",shift @_);
 }
@@ -204,8 +190,10 @@ sub ReadLibrary {
     my $i;
     my @RLtmp_tbl;
     my $RLline;
-    open(LIB,$setup{'library'}) or die "ERROR: Cannot open library file (".$setup{'library'}."). Exiting.";
-    while ($RLline=<LIB>) {
+    my $RLfh;
+
+    open $RLfh,$setup{'library'} or die "ERROR: Cannot open library file (".$setup{'library'}."). Exiting.";
+    while ($RLline=<$RLfh>) {
         @RLtmp_tbl=[];
         $RLline=~tr/[\r\n]//d;
         if ($RLline=~/,/){
@@ -220,7 +208,6 @@ sub ReadLibrary {
     }
 }
 
-
 sub GetArgs {
 	my @ARG_LIST=@ARGV;
 	my $arg;
@@ -231,8 +218,7 @@ sub GetArgs {
 			PrintHelp();
 			exit(0);
 		} elsif ($arg eq '-l') {
-			PrintLibrary();
-			exit(0);
+            $setup{'printlegend'} = 1;
 		} elsif ($arg eq '-i'){
 			$setup{'library'} = $ARG_LIST[$i+1];
 			$i++;
@@ -240,8 +226,11 @@ sub GetArgs {
 			$setup{'library_legend'} = $ARG_LIST[$i+1];
 			$i++;
 		} elsif ($arg eq '-o') {
-			$setup{'output_file'} = $ARG_LIST[$i+1];
-			$i++;
+            $setup{'output_file'} = $ARG_LIST[$i + 1];
+            $i++;
+        } elsif ($arg eq '-s') {
+            $setup{'simulate'} = 1;
+            $i++;
 		} elsif ($arg eq '-c') {
 			my $j;
 			for ($j=$i+1;$j<=$#ARG_LIST;$j++) {
@@ -271,6 +260,23 @@ sub GetArgs {
 			exit(1);
 		}
     }
+
+    # Basic input parameter tests
+    if ($#{$setup{'item_list'}} == -1) {
+        print "ERROR: Empty item list. Exiting.";
+        exit(1);
+    }
+    if ((!defined $setup{'library'}) and (!defined $setup{'library_legend'})) {
+        print "ERROR: library and/ot library legend file not defined. Exiting.";
+        exit(1);
+    }
+
+    ReadLibrary();
+
+    if ($setup{'printlegend'} == 1) {
+        PrintLibraryLegend();
+        exit(0);
+    }
 }
 
 sub PrintHelp {
@@ -293,21 +299,29 @@ Options:
         -l : Print optics/weapon combinations in library
         -rl: Range list for long ranges [150,175,200,225,250,275,300,325]
         -rs: Range list for short ranges [10,20,30,40,50,60,80,100]
+        -s : Simulate parsing, print to STDOUT
         -h : This help
 
 Example:
         range_card_parser[.exe|.pl] -c "L1/.17HMR" "S2/CroPis"
-        range_card_parser[.exe|.pl] -c "A1/.17HMR" "S2/CroPis" "M1/6.5x55" -rl 150,200,300 -rs 20,40,60
+        range_card_parser[.exe|.pl] -c "M1/.17HMR" "S2/CroPis" "M1/6.5x55" -rl 150,200,300 -rs 20,40,60
 
 XXX
 
 }
 
-sub PrintLibrary {
+sub PrintLibraryLegend {
+    my $PLfh;
     my @PL_file;
-    open (LIB_LEGEND,$setup{'library_legend'}) or die "ERROR: Cannot open library legend file (".$setup{'library_legend'}."). Exiting.";
-    @PL_file=<LIB_LEGEND>;
+    open $PLfh,"<",$setup{'library_legend'} or die "ERROR: Cannot open library legend file (".$setup{'library_legend'}."). Exiting.";
+    @PL_file=<$PLfh>;
     print "--- Library legend: ",$setup{'library_legend'},"\n";
     print @PL_file;
-    close (LIB_LEGEND);
+    close ($PLfh);
+
+    my $itemlist="Available combinations: ".join(', ',sort keys %lib_name)."\n";
+    my $wrap_length = 100;
+    my $wrapped_itemlist;
+    ($wrapped_itemlist = $itemlist) =~s/(.{0,$wrap_length}(?:\s|$))/$1\n/g;
+    print $wrapped_itemlist;
 }
