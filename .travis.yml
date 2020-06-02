@@ -1,5 +1,6 @@
 language: perl
-perl: "latest"
+perl:
+  - "latest"
 os: "linux"
 dist: "bionic"
-script: Range\ Cards\range_card_parser\src\range_card_parser.pl -h
+script: ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
