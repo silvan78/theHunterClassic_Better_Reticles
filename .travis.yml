@@ -6,6 +6,13 @@ dist: "bionic"
 install:
   - cpanm . || cat /home/travis/.cpanm/work/*/build.log
 script:
-  - ls
+# Help test
   - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
+# Library reading
+  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -l
+# Range Card Generation
+  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243"
+  - diff ./Range\ Cards/hunt/range_card.txt ./Range\ Cards/range_card_parser/test/range_card_test.txt
+
+
 

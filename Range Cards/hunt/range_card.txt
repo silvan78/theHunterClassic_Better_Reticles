@@ -1,9 +1,0 @@
-Universal Reticle MRAD Range Card 20200602
-
-       (M1)  (M1)           (S2)
-        .17 6.5x5          Cross
-LONG    HMR    BA    SHORT Pisto
-----+------------    ----+------
- 150|  0.00  0.00      20|  0.40
- 200|  0.00  0.10      40|  1.00
- 300|  0.40  0.50      60|  1.50
