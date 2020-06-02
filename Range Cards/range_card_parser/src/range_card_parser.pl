@@ -260,14 +260,17 @@ sub GetArgs {
 			exit(1);
 		}
     }
-
-    # Basic input parameter tests
-    if ($#{$setup{'item_list'}} == -1) {
-        print "ERROR: Empty item list. Exiting.";
-        exit(1);
-    }
+    # Basic library parameter tests
     if ((!defined $setup{'library'}) and (!defined $setup{'library_legend'})) {
         print "ERROR: library and/ot library legend file not defined. Exiting.";
+        exit(1);
+    }
+    if (! -e $setup{'library'}) {
+        print "ERROR: $setup{'library'} library file does not exist. Exiting.\n";
+        exit(1);
+    }
+    if (! -e $setup{'library_legend'}) {
+        print "ERROR: $setup{'library_legend'} legend file does not exist. Exiting.\n";
         exit(1);
     }
 
@@ -276,6 +279,12 @@ sub GetArgs {
     if ($setup{'printlegend'} == 1) {
         PrintLibraryLegend();
         exit(0);
+    }
+
+    # Input item parameter test
+    if ($#{$setup{'item_list'}} == -1) {
+        print "ERROR: Empty item list. Exiting.";
+        exit(1);
     }
 }
 
