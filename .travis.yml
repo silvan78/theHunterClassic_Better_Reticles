@@ -1,0 +1,2 @@
+language: perl
+script: Range\ Cards\range_card_parser\src\range_card_parser.pl -h
