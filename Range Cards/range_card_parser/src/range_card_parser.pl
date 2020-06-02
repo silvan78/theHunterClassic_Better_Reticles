@@ -7,6 +7,11 @@ my $today = strftime"%Y%m%d", localtime;
 my %setup=();
 my %lib_name=();
 my %lib_correction=();
+my $item;
+my $range;
+my @LongRangeLines;
+my @ShortRangeLines;
+my $z;
 
 # Defaults
 $setup{'library'} = 'Universal Reticle MRAD.txt';
@@ -80,6 +85,7 @@ print {OUT} "Universal Reticle MRAD Range Card $today\n\n";
 @LongRangeLines=();
 @ShortRangeLines=();
 push(@LongRangeLines,"     ");
+push(@LongRangeLines,"     ");
 push(@LongRangeLines,"LONG ");
 push(@LongRangeLines,"----+");
 foreach $range (@{$setup{'range_list_long'}}){
@@ -87,15 +93,15 @@ foreach $range (@{$setup{'range_list_long'}}){
 }
 foreach $item (@LongRangeItems) {
     $LongRangeLines[0].=ItemCode($item);
-    $LongRangeLines[1].=FormatName($lib_name{$item});
-    $LongRangeLines[2].="------";
-    my $z;
+    $LongRangeLines[1].=FormatName1stLine($lib_name{$item});
+    $LongRangeLines[2].=FormatName2ndLine($lib_name{$item});
+    $LongRangeLines[3].="------";
     for ($z=0;$z<=$#{$setup{'range_list_long'}};$z++) {
         $range=$setup{'range_list_long'}[$z];
-        $LongRangeLines[$z+3].=FormatCorrection($lib_correction{$item}{$range});
+        $LongRangeLines[$z+4].=FormatCorrection($lib_correction{$item}{$range});
     }
 }
-
+push(@ShortRangeLines,"     ");
 push(@ShortRangeLines,"     ");
 push(@ShortRangeLines,"SHORT");
 push(@ShortRangeLines,"----+");
@@ -104,24 +110,24 @@ foreach $range (@{$setup{'range_list_short'}}){
 }
 foreach $item (@ShortRangeItems) {
     $ShortRangeLines[0].=ItemCode($item);
-    $ShortRangeLines[1].=FormatName($lib_name{$item});
-    $ShortRangeLines[2].="------";
-    my $z;
+    $ShortRangeLines[1].=FormatName1stLine($lib_name{$item});
+    $ShortRangeLines[2].=FormatName2ndLine($lib_name{$item});
+    $ShortRangeLines[3].="------";
     for ($z=0;$z<=$#{$setup{'range_list_short'}};$z++) {
         $range=$setup{'range_list_short'}[$z];
-        $ShortRangeLines[$z+3].=FormatCorrection($lib_correction{$item}{$range});
+        $ShortRangeLines[$z+4].=FormatCorrection($lib_correction{$item}{$range});
     }
 }
 
 #deciding which has more lines
-my $filler_length;
+my $filler;
 if ($#LongRangeLines > $#ShortRangeLines) {
-    $filler=sprintf("%*s",length($ShortRangeLines[2]),"");
+    $filler=sprintf("%*s",length($ShortRangeLines[3]),"");
     foreach $z ($#LongRangeLines-$#ShortRangeLines .. $#LongRangeLines) {
         push(@ShortRangeLines,$filler);
     }
 } elsif ($#LongRangeLines < $#ShortRangeLines) {
-    $filler=sprintf("%*s",length($LongRangeLines[2]),"");
+    $filler=sprintf("%*s",length($LongRangeLines[3]),"");
     foreach $z ($#ShortRangeLines-$#LongRangeLines .. $#ShortRangeLines) {
         push(@LongRangeLines,$filler);
     }
@@ -154,6 +160,24 @@ sub FormatCorrection {
     }
 }
 
+sub FormatName1stLine {
+    my $FNin=shift @_;
+    my @FNtbl=split(' ',$FNin);
+    return " ".sprintf("%5s",substr($FNtbl[0],0,5));
+}
+
+sub FormatName2ndLine {
+    my $FNin=shift @_;
+    my @FNtbl;
+    if ($FNin=~/ /) {
+        @FNtbl = split(' ', $FNin);
+        @FNtbl = splice @FNtbl, 1, $#FNtbl;
+        return " " . sprintf("%5s", substr(join(' ', @FNtbl), 0, 5));
+    } else {
+        return "      ";
+    }
+}
+
 sub FormatName {
     my $FNin=shift @_;
     return " ".sprintf("%5s",substr($FNin,0,5));
@@ -177,6 +201,8 @@ sub toUpper {
 
 sub ReadLibrary {
     my $i;
+    my @RLtmp_tbl;
+    my $RLline;
     open(LIB,$setup{'library'}) or die "ERROR: Cannot open library file (".$setup{'library'}."). Exiting.";
     while ($RLline=<LIB>) {
         @RLtmp_tbl=[];
@@ -265,8 +291,8 @@ Options:
         -h : This help
 
 Example:
-        range_card_parser[.exe|.pl] -c "S1/.17HMR" "C1/CroPis"
-        range_card_parser[.exe|.pl] -c "S1/.17HMR" "C1/CroPis" "M1/6.5x55" -rl 150,200,300 -rs 20,40,60
+        range_card_parser[.exe|.pl] -c "L1/.17HMR" "S2/CroPis"
+        range_card_parser[.exe|.pl] -c "A1/.17HMR" "S2/CroPis" "M1/6.5x55" -rl 150,200,300 -rs 20,40,60
 
 XXX
 
