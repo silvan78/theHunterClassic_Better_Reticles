@@ -4,6 +4,6 @@ perl:
 os: "linux"
 dist: "bionic"
 install:
-  - cpanm .
+  - cpanm . || cat /home/travis/.cpanm/work/*/build.log
 script: ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
 
