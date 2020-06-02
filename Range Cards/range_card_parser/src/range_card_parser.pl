@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+$version="1.0";
 
 use POSIX qw(strftime);
 
@@ -14,8 +15,8 @@ my @ShortRangeLines;
 my $z;
 
 # Defaults
-$setup{'library'} = 'Universal Reticle MRAD.txt';
-$setup{'library_legend'} = 'Universal Reticle MRAD legend.txt';
+$setup{'library'} = 'data/Universal Reticle MRAD.txt';
+$setup{'library_legend'} = 'data/Universal Reticle MRAD legend.txt';
 $setup{'output_file'} = 'hunt/range_card.txt';
 $setup{'item_list'} = [];
 $setup{'range_list_long'} = [150,175,200,225,250,275,300,325];
@@ -274,11 +275,15 @@ sub GetArgs {
 
 sub PrintHelp {
     print << "XXX";
-range_card_parser[.exe|.pl] <options> -c <optics/weapon list>
+range_card_parser v.$version
 
+The Hunter Classic custom overlay reticles range cards formatter.
 Program parses library range card into smaller hunt-specific range card.
 By default data form Range Cards/Universal Reticle MRAD.txt are cut into
 Range Cards/hunt/range_card.txt file.
+
+Usage:
+       range_card_parser[.exe|.pl] <options> -c <optics/weapon list>
 
 Options:
         -c : Calibre/optics/weapon index items for hunt
