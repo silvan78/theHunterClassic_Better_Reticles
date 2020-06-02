@@ -1,5 +1,6 @@
-Format: OpticeWeaponIndex/Calibre, (ie. M1/.17HMR)
-Optics: L - long, M - medium, S- short, I - ironshigt, B - basic bow, R -rangefinder
+
+Format: OpticsWeaponIndex/Calibre, (ie. M1/.17HMR)
+Optics: L - long, M - medium, S- short, I - ironshigt, B - basic bow, R - rangefinder
 
 +------------------------------------------------+-----------------------------+----------------+
 | Optics                                         | WeaponIndex                 | Calibre        |
