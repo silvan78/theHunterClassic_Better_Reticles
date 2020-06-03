@@ -4,7 +4,7 @@ install:
   - chocolatey.exe install StrawberryPerl -y
   - export PATH=/c/Strawberry/perl/bin:/c/Strawberry/perl/site/bin
   - export PERL5LIB="/c/Strawberry/perl/lib:/c/Strawberry/perl/site/lib:/c/Strawberry/perl/vendor/lib"
-  - /c/Strawberry/perl/bin/perl /c/Strawberry/perl/bin/cpan pp
+  - /c/Strawberry/perl/bin/perl /c/Strawberry/perl/bin/cpan -T pp
 script:
 # Help test
   - /c/Strawberry/perl/bin/perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
@@ -17,6 +17,7 @@ script:
 # Build new exe
   - /c/Strawberry/perl/bin/perl /c/Strawberry/perl/site/bin/pp -o ./Range\ Cards/range_card_parser.exe ./Range\ Cards/range_card_parser/src/range_card_parser.pl
 # TODO: deploy succesful packing
+# TODO: cache build env (/c/Strawberry)
 
 
 
