@@ -2,20 +2,21 @@ language: shell
 os: "windows"
 install:
   - chocolatey.exe install StrawberryPerl -y
-  - ls /c/Strawberry/perl/bin
-  - /c/Strawberry/perl/bin/perl.exe -v
-  - /c/Strawberry/perl/bin/cpanm.bat -n pp
-  - ls /c/Strawberry/perl/site/bin
-after_install:
-  - export PATH=/c/Strawberry/perl/bin:/C/Strawberry/perl/site/bin:$PATH
-  - where.exe perl
+  - export PATH=/c/Strawberry/perl/bin:/c/Strawberry/perl/site/bin
+  - export PERL5LIB="/c/Strawberry/perl/lib:/c/Strawberry/perl/site/lib:/c/Strawberry/perl/vendor/lib"
+  - /c/Strawberry/perl/bin/perl /c/Strawberry/perl/bin/cpan pp
 script:
 # Help test
-  - /c/Strawberry/perl/bin/perl.exe ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
 # Library reading
-  - /c/Strawberry/perl/bin/perl.exe ./Range\ Cards/range_card_parser/src/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
 # Range Card Generation Simulation and comparison with test file (1st line not included)
-  - /c/Strawberry/perl/bin/perl.exe ./Range\ Cards/range_card_parser/src/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/range_card_parser/test/range_card_test.txt
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/range_card_parser/test/range_card_test.txt
+# Make a link in Range Cards
+  - ln -sf ./Range\ Cards/range_card_parser/src/range_card_parser.pl ./Range\ Cards/range_card_parser.pl
+# Build new exe
+  - /c/Strawberry/perl/bin/perl /c/Strawberry/perl/site/bin/pp -o ./Range\ Cards/range_card_parser.exe ./Range\ Cards/range_card_parser/src/range_card_parser.pl
+# TODO: deploy succesful packing
 
 
 
