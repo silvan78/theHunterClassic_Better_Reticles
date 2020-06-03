@@ -1,10 +1,8 @@
 language: perl
-perl:
-  - "5.26"
-os: "linux"
-dist: "bionic"
+os: "windows"
 install:
-  - cpanm . || cat /home/travis/.cpanm/work/*/build.log
+  - chocolatey.exe install StrawberryPerl
+  - cpan.bar -i pp
 script:
 # Help test
   - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
