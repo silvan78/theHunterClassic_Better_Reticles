@@ -5,9 +5,24 @@ os: "windows"
 branches:
   except:
     - master
+    - /^untagged/
+    - /TRAVIS_TAG/
 
-# TODO: deploy successful packing
-#deploy:
+before_deploy:
+    # Set up git user name and tag this commit
+    - git config --local user.name "silvan78"
+    - git config --local user.email "lukasz.knizewski+github@gmail.com"
+    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+    - git tag $TRAVIS_TAG
+deploy:
+  provider: releases
+  skip_cleanup: true
+  github_token: ${{ secrets.TOKEN_GITHUB }}  # Set in the settings page of your repository, as a secure variable
+  keep_history: true
+  file:
+    - ./Range\ Cards/range_card_parser.exe
+    - ./Range\ Cards/range_card_parser.pl
+  draft: true
 
 install:
   - chocolatey.exe install StrawberryPerl -y
