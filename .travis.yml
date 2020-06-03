@@ -2,7 +2,7 @@ language: shell
 os: "windows"
 install:
   - chocolatey.exe install StrawberryPerl -y
-  - export PATH=/c/Strawberry/perl/bin:/c/Strawberry/perl/site/bin:$PATH
+  - export PATH=/c/Strawberry/perl/bin:/c/Strawberry/perl/site/bin:/c/Strawberry/c/bin:$PATH
   - export PERL5LIB="/c/Strawberry/perl/lib:/c/Strawberry/perl/site/lib:/c/Strawberry/perl/vendor/lib"
   - LASTPATH=$(pwd)
   - cd /c/Strawberry/perl/bin
