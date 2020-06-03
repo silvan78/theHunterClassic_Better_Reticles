@@ -14,6 +14,7 @@ before_deploy:
     - git config --local user.email "lukasz.knizewski+github@gmail.com"
     - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
     - git tag $TRAVIS_TAG
+
 deploy:
   provider: releases
   skip_cleanup: true
@@ -23,16 +24,18 @@ deploy:
     - ./Range\ Cards/range_card_parser.exe
     - ./Range\ Cards/range_card_parser.pl
   draft: true
+  on:
+    branch:
+      - draft_release
 
 install:
-  - chocolatey.exe install StrawberryPerl -y
+  - if [[ -d /c/Strawberry ]]; then echo "Strawberry from cache."; else chocolatey.exe install StrawberryPerl -y;fi
   - export PATH="/c/Strawberry/perl/bin:/c/Strawberry/perl/site/bin:/c/Strawberry/c/bin:$PATH"
   - export PERL5LIB="/c/Strawberry/perl/lib:/c/Strawberry/perl/site/lib:/c/Strawberry/perl/vendor/lib"
   - LASTPATH=$(pwd)
   - cd /c/Strawberry/perl/bin
-  - cpanm.bat -f -n pp || cat /c/Users/travis/.cpanm/work/*/build.log
+  - if [[ -f /c/Strawberry/perl/site/bin/pp.bat ]]; then echo "PP from cache."; else cpanm.bat -f -n pp || cat /c/Users/travis/.cpanm/work/*/build.log;fi
   - ls /c/Strawberry/perl/site/bin
-  - where pp
   - cd $LASTPATH
 
 script:
