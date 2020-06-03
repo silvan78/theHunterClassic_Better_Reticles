@@ -1,3 +1,4 @@
+language: shell
 os: "windows"
 install:
   - chocolatey.exe install StrawberryPerl
