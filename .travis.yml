@@ -1,5 +1,14 @@
 language: shell
+
 os: "windows"
+
+branches:
+  except:
+    - master
+
+# TODO: deploy successful packing
+#deploy:
+
 install:
   - chocolatey.exe install StrawberryPerl -y
   - export PATH="/c/Strawberry/perl/bin:/c/Strawberry/perl/site/bin:/c/Strawberry/c/bin:$PATH"
@@ -10,6 +19,7 @@ install:
   - ls /c/Strawberry/perl/site/bin
   - where pp
   - cd $LASTPATH
+
 script:
 # Help test
   - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -h
@@ -26,5 +36,7 @@ script:
   - pp.bat -o ${LASTPATH}/Range\ Cards/range_card_parser.exe ${LASTPATH}/Range\ Cards/src/range_card_parser/range_card_parser.pl
   - cd ${LASTPATH}
   - ls -l ./Range\ Cards/
-# TODO: deploy successful packing
-# TODO: cache build env (/c/Strawberry)
+
+cache:
+  directories:
+    - /c/Strawberry
