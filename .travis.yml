@@ -6,7 +6,7 @@ install:
   - export PERL5LIB="/c/Strawberry/perl/lib:/c/Strawberry/perl/site/lib:/c/Strawberry/perl/vendor/lib"
   - LASTPATH=$(pwd)
   - cd /c/Strawberry/perl/bin
-  - cpan.bat -f -T -i pp
+  - cpan.bat -Ti pp || ls /c/Strawberry/perl/site/bin
   - cd $LASTPATH
 script:
 # Help test
