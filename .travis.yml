@@ -2,10 +2,12 @@ language: shell
 os: "windows"
 install:
   - chocolatey.exe install StrawberryPerl
+  - where perl
+  - where cpan.bat
+  - where cpan
   - cpan.bat -i pp
 script:
 # Help test
-  - where perl
   - where pp.bat
   - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
 # Library reading
