@@ -1,19 +1,21 @@
 language: shell
 os: "windows"
 install:
-  - chocolatey.exe install StrawberryPerl
-  - where perl
-  - where cpan.bat
-  - where cpan
-  - cpan.bat -i pp
+  - chocolatey.exe install StrawberryPerl -y
+  - ls /c/Strawberry/perl/bin
+  - /c/Strawberry/perl/bin/perl.exe -v
+  - /c/Strawberry/perl/bin/cpan.bat -i pp
+  - ls /C/Strawberry/perl/site/bin
+after_install:
+  - export PATH=/C/Strawberry/perl/bin:/C/Strawberry/perl/site/bin:$PATH
+  - where.exe perl
 script:
 # Help test
-  - where pp.bat
-  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
+  - /C/Strawberry/perl/bin/perl.exe ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
 # Library reading
-  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
+  - /C/Strawberry/perl/bin/perl.exe ./Range\ Cards/range_card_parser/src/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
 # Range Card Generation Simulation and comparison with test file (1st line not included)
-  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/range_card_parser/test/range_card_test.txt
+  - /C/Strawberry/perl/bin/perl.exe ./Range\ Cards/range_card_parser/src/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/range_card_parser/test/range_card_test.txt
 
 
 
