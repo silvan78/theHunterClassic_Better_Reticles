@@ -2,9 +2,11 @@ language: shell
 os: "windows"
 install:
   - chocolatey.exe install StrawberryPerl
-  - cpan.bar -i pp
+  - cpan.bat -i pp
 script:
 # Help test
+  - where perl
+  - where pp.bat
   - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
 # Library reading
   - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
