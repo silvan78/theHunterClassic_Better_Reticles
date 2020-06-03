@@ -14,7 +14,7 @@ script:
 # Help test
   - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -h
 # Library reading
-  - /c/Strawberry/perl/bin/perl ./Range\ Cards/ser/range_card_parser/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
 # Range Card Generation Simulation and comparison with test file (1st line not included)
   - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/range_card_parser/test/range_card_test.txt
 # Make a link for perl script is right place (no symbolic is available here)
@@ -26,5 +26,5 @@ script:
   - pp.bat -o ${LASTPATH}/Range\ Cards/range_card_parser.exe ${LASTPATH}/Range\ Cards/src/range_card_parser/range_card_parser.pl
   - cd ${LASTPATH}
   - ls -l ./Range\ Cards/
-# TODO: deploy succesful packing
+# TODO: deploy successful packing
 # TODO: cache build env (/c/Strawberry)
