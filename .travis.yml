@@ -68,10 +68,14 @@ after_success:
 #  - git tag $TRAVIS_TAG
   #Setup credentials
   - mkdir ~/.git 2>/dev/null
-  - git config credential.helper --unset
-  - git config credential.helper "store --file=~/.git/credentials"
-  - cat ~/.git/credentials
+  - git config --global --unset credential.helper
+  - git config --list
+  - git config --system --unset credential.helper
+  - git config --list
+  - git config --global credential.helper "store --file=~/.git/credentials"
+  - git config --list
   - echo "https://${GITHUB_TOKEN}:@github.com" > ~/.git/credentials
+  - cat ~/.git/credentials
   - git remote set-url origin https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
   #Deploy to current branch
   - git add .
