@@ -74,6 +74,7 @@ after_success:
   - git add .
   - git commit -m "$TRAVIS_TAG deploy"
   - git tag $TRAVIS_TAG
+  - git config --list
   - git push origin $BRANCH --tags $TRAVIS_TAG
 #  - git push -f -q https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git $TRAVIS_TAG
 
