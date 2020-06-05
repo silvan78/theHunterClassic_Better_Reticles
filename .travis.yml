@@ -6,7 +6,7 @@ branches:
   except:
     - master
     - /^untagged/
-    - /^TRAVIS_TAG/
+    - /^TRAVIS/
   only:
     - dev
     - travis-windows
@@ -50,7 +50,7 @@ after_success:
   #Set up git user name and tag this commit
   - git config --local user.name "silvan78"
   - git config --local user.email "lukasz.knizewski+github@gmail.com"
-  - export TRAVIS_TAG=${TRAVIS_TAG:drarf-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - export TRAVIS_TAG="TRAVIS-"$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
   - git tag $TRAVIS_TAG
   #Setup credentials
 #  - git config credential.helper "store --file=.git/credentials"
