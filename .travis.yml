@@ -29,6 +29,10 @@ install:
   - ls /c/Strawberry/perl/site/bin
   - cd $LASTPATH
 
+before_script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+
 script:
 # Help test
   - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -h
@@ -60,7 +64,7 @@ after_success:
   - git add .
   - git commit -m "$TRAVIS_TAG deploy"
   - git tag $TRAVIS_TAG
-  - git push origin --tags $TRAVIS_TAG
+  - git push origin $BRANCH --tags $TRAVIS_TAG
 #  - git push -f -q https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git $TRAVIS_TAG
 
 #before_deploy:
