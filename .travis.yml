@@ -70,6 +70,10 @@ after_success:
 #  - git tag $TRAVIS_TAG
 # Link remote
   - git remote set-url origin https://$GH_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
+  # Fix detached HEAD
+  - git branch ${BRANCH}-travis-tmp
+  - git checkout ${BRANCH}
+  - git merge --verbose ${BRANCH}-travis-tmp
 # Push
 #  - git push --set-upstream origin $BRANCH --tags $TRAVIS_TAG
   - git push -v --force --set-upstream origin $BRANCH
