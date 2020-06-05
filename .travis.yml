@@ -65,10 +65,14 @@ after_success:
   - export TRAVIS_TAG="TRAVIS-"$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
 # Add files comit and tag
   - git add .
+  - git status
   - git commit -m "$TRAVIS_TAG commit"
 #  - git tag $TRAVIS_TAG
 # Link remote
   - git remote set-url origin https://$GH_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
 # Push
 #  - git push --set-upstream origin $BRANCH --tags $TRAVIS_TAG
-  - git push --set-upstream origin $BRANCH
+  - git push --set-upstream origin $BRANCH --force
+  - git log
+
+
