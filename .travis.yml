@@ -62,16 +62,17 @@ after_success:
   - git config --global user.name "Travis-CI"
   - git config --global user.email "travis@travis-ci.com"
 # Prepare tag
-  - export TRAVIS_TAG="TRAVIS-"$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
+  - export TRAVIS_TAG="[skip ci] TRAVIS build and commit "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
 # Add files comit and tag
   - git add -v -A .
   - git status
-  - git commit -m "$TRAVIS_TAG build and commit"
+  - git commit -m "$TRAVIS_TAG"
 #  - git tag $TRAVIS_TAG
 # Link remote
   - git remote set-url origin https://$GH_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
   # Fix detached HEAD
   - git branch ${BRANCH}-travis-tmp
+  - git checkout ${BRANCH}-travis-tmp
   - git checkout ${BRANCH}
   - git merge --verbose ${BRANCH}-travis-tmp
 # Push
