@@ -12,27 +12,10 @@ branches:
     - travis-windows
     - range_card_parser
 
-before_deploy:
-    # Set up git user name and tag this commit
-    - git config --local user.name "silvan78"
-    - git config --local user.email "lukasz.knizewski+github@gmail.com"
-    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-    - git tag $TRAVIS_TAG
+cache:
+  directories:
+    - /c/Strawberry
 
-deploy:
-  provider: releases
-  skip_cleanup: true
-  #github_token: ${{ secrets.TOKEN_GITHUB }}  # Set in the settings page of your repository, as a secure variable
-  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-  keep_history: true
-  file:
-    - ./Range\ Cards/range_card_parser.exe
-    - ./Range\ Cards/range_card_parser.pl
-  overwrite: true
-  draft: true
-  on:
-#    tags: true
-    branch: dev
 
 
 install:
@@ -63,6 +46,35 @@ script:
   - cd ${LASTPATH}
   - ls -l ./Range\ Cards/
 
-cache:
-  directories:
-    - /c/Strawberry
+after_success:
+  #Set up git user name and tag this commit
+  - git config --local user.name "silvan78"
+  - git config --local user.email "lukasz.knizewski+github@gmail.com"
+  - export TRAVIS_TAG=${TRAVIS_TAG:drarf-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - git tag $TRAVIS_TAG
+  #Setup credentials
+#  - git config credential.helper "store --file=.git/credentials"
+#  - echo "https://${GITHUB_TOKEN}:@github.com" > .git/credentials
+  #Deploy to current branch
+  - git push -f -q https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git $TRAVIS_TAG
+#before_deploy:
+#  # Set up git user name and tag this commit
+#  - git config --local user.name "silvan78"
+#  - git config --local user.email "lukasz.knizewski+github@gmail.com"
+#  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+#  - git tag $TRAVIS_TAG
+
+#deploy:
+#  provider: releases
+#  skip_cleanup: true
+#  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+#  keep_history: true
+#  file:
+#    - ./Range\ Cards/range_card_parser.exe
+#    - ./Range\ Cards/range_card_parser.pl
+#  overwrite: true
+#  draft: true
+#  on:
+#    tags: true
+#    branch:
+#      master
