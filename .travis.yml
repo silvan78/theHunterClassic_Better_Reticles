@@ -75,6 +75,7 @@ after_success:
   - git remote set-url origin https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
   #Deploy to current branch
   - git add .
+  - git status
   - git commit -m "$TRAVIS_TAG deploy"
   - git tag $TRAVIS_TAG
   - git config --list
