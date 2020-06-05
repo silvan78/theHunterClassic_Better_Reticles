@@ -26,7 +26,7 @@ deploy:
   draft: true
   on:
     branch:
-      - draft_release
+      - dev
 
 install:
   - if [[ -d /c/Strawberry ]]; then echo "Strawberry from cache."; else chocolatey.exe install StrawberryPerl -y;fi
