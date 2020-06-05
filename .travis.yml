@@ -66,8 +66,9 @@ after_success:
 # Add files comit and tag
   - git add .
   - git commit -m "$TRAVIS_TAG commit"
-  - git tag $TRAVIS_TAG
+#  - git tag $TRAVIS_TAG
 # Link remote
   - git remote set-url origin https://$GH_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
 # Push
-  - git push --set-upstream origin $BRANCH --tags $TRAVIS_TAG
+#  - git push --set-upstream origin $BRANCH --tags $TRAVIS_TAG
+  - git push --set-upstream origin $BRANCH
