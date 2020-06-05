@@ -7,6 +7,10 @@ branches:
     - master
     - /^untagged/
     - /TRAVIS_TAG/
+  only:
+    - dev
+    - travis-windows
+    - range_card_parser
 
 before_deploy:
     # Set up git user name and tag this commit
@@ -24,12 +28,16 @@ deploy:
   file:
     - ./Range\ Cards/range_card_parser.exe
     - ./Range\ Cards/range_card_parser.pl
+  overwrite: true
   draft: true
   on:
-    - tags: true
+    tags: true
+    branch: dev
+
 
 install:
-  - if [[ -d /c/Strawberry ]]; then echo "Strawberry from cache."; else chocolatey.exe install StrawberryPerl -y;fi
+  - ls /c/Strawberry 2>/dev/null
+  - if [[ -d /c/Strawberry ]]; then echo "Strawberry from cache."; else echo "Strawberry missing";chocolatey.exe install StrawberryPerl;fi
   - export PATH="/c/Strawberry/perl/bin:/c/Strawberry/perl/site/bin:/c/Strawberry/c/bin:$PATH"
   - export PERL5LIB="/c/Strawberry/perl/lib:/c/Strawberry/perl/site/lib:/c/Strawberry/perl/vendor/lib"
   - LASTPATH=$(pwd)
