@@ -31,7 +31,7 @@ deploy:
   overwrite: true
   draft: true
   on:
-    tags: true
+#    tags: true
     branch: dev
 
 
