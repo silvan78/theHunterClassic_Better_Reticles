@@ -6,7 +6,7 @@ branches:
   except:
     - master
     - /^untagged/
-    - /TRAVIS_TAG/
+    - /^TRAVIS_TAG/
   only:
     - dev
     - travis-windows
