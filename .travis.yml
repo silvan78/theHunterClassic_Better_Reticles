@@ -16,8 +16,6 @@ cache:
   directories:
     - /c/Strawberry
 
-
-
 install:
   - ls /c/Strawberry 2>/dev/null
   - if [[ -d /c/Strawberry ]]; then echo "Strawberry from cache."; else echo "Strawberry missing";chocolatey.exe install StrawberryPerl;fi
@@ -74,49 +72,3 @@ after_success:
   - git remote set-url origin https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
 # Push
   - git push --set-upstream origin $BRANCH --tags $TRAVIS_TAG
-#  #Set up git user name and tag this commit
-#  - git config --global user.name "silvan78"
-#  - git config --global user.email "lukasz.knizewski@gmail.com"
-#  - export TRAVIS_TAG="TRAVIS-"$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
-##  - git tag $TRAVIS_TAG
-#  #Setup credentials
-#  - mkdir ~/.git 2>/dev/null
-#  - git config --global --unset credential.helper
-#  - git config --list
-#  - git config --system --unset credential.helper
-#  - git config --list
-#  - git config --global credential.helper "store --file=~/.git/credentials"
-#  - git config --list
-#  - echo "https://${GITHUB_TOKEN}:@github.com" > ~/.git/credentials
-#  - cat ~/.git/credentials
-#  - git remote set-url origin https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
-#  #Deploy to current branch
-#  - git add .
-#  - git status
-#  - git commit -m "$TRAVIS_TAG deploy"
-#  - git tag $TRAVIS_TAG
-#  - git config --list
-#  - git push origin $BRANCH --tags $TRAVIS_TAG --force
-##  - git push -f -q https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git $TRAVIS_TAG
-
-#before_deploy:
-#  # Set up git user name and tag this commit
-#  - git config --local user.name "silvan78"
-#  - git config --local user.email "lukasz.knizewski+github@gmail.com"
-#  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-#  - git tag $TRAVIS_TAG
-
-#deploy:
-#  provider: releases
-#  skip_cleanup: true
-#  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-#  keep_history: true
-#  file:
-#    - ./Range\ Cards/range_card_parser.exe
-#    - ./Range\ Cards/range_card_parser.pl
-#  overwrite: true
-#  draft: true
-#  on:
-#    tags: true
-#    branch:
-#      master
