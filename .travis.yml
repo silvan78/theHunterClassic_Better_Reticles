@@ -61,30 +61,43 @@ script:
   - ./Range\ Cards/range_card_parser.exe -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/src/test/range_card_test.txt
 
 after_success:
-  #Set up git user name and tag this commit
-  - git config --global user.name "silvan78"
-  - git config --global user.email "lukasz.knizewski@gmail.com"
+# Setup git
+  - git config --global user.name "Travis-CI"
+  - git config --global user.email "travis@travis-ci.com"
+# Prepare tag
   - export TRAVIS_TAG="TRAVIS-"$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
-#  - git tag $TRAVIS_TAG
-  #Setup credentials
-  - mkdir ~/.git 2>/dev/null
-  - git config --global --unset credential.helper
-  - git config --list
-  - git config --system --unset credential.helper
-  - git config --list
-  - git config --global credential.helper "store --file=~/.git/credentials"
-  - git config --list
-  - echo "https://${GITHUB_TOKEN}:@github.com" > ~/.git/credentials
-  - cat ~/.git/credentials
-  - git remote set-url origin https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
-  #Deploy to current branch
+# Add files comit and tag
   - git add .
-  - git status
-  - git commit -m "$TRAVIS_TAG deploy"
+  - git commit -m "$TRAVIS_TAG commit"
   - git tag $TRAVIS_TAG
-  - git config --list
-  - git push origin $BRANCH --tags $TRAVIS_TAG --force
-#  - git push -f -q https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git $TRAVIS_TAG
+# Link remote
+  - git remote add origin https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
+# Push
+  - git push --set-upstream origin $BRANCH --tags $TRAVIS_TAG --force
+#  #Set up git user name and tag this commit
+#  - git config --global user.name "silvan78"
+#  - git config --global user.email "lukasz.knizewski@gmail.com"
+#  - export TRAVIS_TAG="TRAVIS-"$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
+##  - git tag $TRAVIS_TAG
+#  #Setup credentials
+#  - mkdir ~/.git 2>/dev/null
+#  - git config --global --unset credential.helper
+#  - git config --list
+#  - git config --system --unset credential.helper
+#  - git config --list
+#  - git config --global credential.helper "store --file=~/.git/credentials"
+#  - git config --list
+#  - echo "https://${GITHUB_TOKEN}:@github.com" > ~/.git/credentials
+#  - cat ~/.git/credentials
+#  - git remote set-url origin https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
+#  #Deploy to current branch
+#  - git add .
+#  - git status
+#  - git commit -m "$TRAVIS_TAG deploy"
+#  - git tag $TRAVIS_TAG
+#  - git config --list
+#  - git push origin $BRANCH --tags $TRAVIS_TAG --force
+##  - git push -f -q https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git $TRAVIS_TAG
 
 #before_deploy:
 #  # Set up git user name and tag this commit
