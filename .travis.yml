@@ -53,8 +53,8 @@ after_success:
   - export TRAVIS_TAG="TRAVIS-"$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
   - git tag $TRAVIS_TAG
   #Setup credentials
-#  - git config credential.helper "store --file=.git/credentials"
-#  - echo "https://${GITHUB_TOKEN}:@github.com" > .git/credentials
+  - git config credential.helper "store --file=.git/credentials"
+  - echo "https://${GITHUB_TOKEN}:@github.com" > .git/credentials
   #Deploy to current branch
   - git push -f -q https://$GITHUB_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git $TRAVIS_TAG
 #before_deploy:
