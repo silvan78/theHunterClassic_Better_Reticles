@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-
 use warnings;
 use strict;
 use POSIX qw(strftime);
@@ -27,7 +26,7 @@ $setup{'simulate'}=0;
 $setup{'printlegend'}=0;
 
 if ($#ARGV < 0) {
-    print "ERROR: No argument given. Exiting.\n\n";
+    print "ERROR: No argument given (items/listing/help). Exiting.\n\n";
     PrintHelp();
     PrintLibraryLegend();
     exit(1);
@@ -37,7 +36,7 @@ GetArgs();
 
 # Read Library data into %lib_names and %lib_correction
 
-# Define Long Range Items
+# Define Long Range
 my @LongRangeItems=();
 foreach $item (@{$setup{'item_list'}}) {
     foreach $range (sort @{$setup{'range_list_long'}}) {
