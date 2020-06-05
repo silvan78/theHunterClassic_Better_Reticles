@@ -18,15 +18,15 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
-  github_token: ${{ secrets.TOKEN_GITHUB }}  # Set in the settings page of your repository, as a secure variable
+  #github_token: ${{ secrets.TOKEN_GITHUB }}  # Set in the settings page of your repository, as a secure variable
+  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
   keep_history: true
   file:
     - ./Range\ Cards/range_card_parser.exe
     - ./Range\ Cards/range_card_parser.pl
   draft: true
   on:
-    branch:
-      - dev
+    - tags: true
 
 install:
   - if [[ -d /c/Strawberry ]]; then echo "Strawberry from cache."; else chocolatey.exe install StrawberryPerl -y;fi
