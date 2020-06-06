@@ -65,20 +65,13 @@ after_success:
   - export TRAVIS_TAG="[skip ci] TRAVIS build and commit "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
 # Add files comit and tag
   - git add -v -A .
-  - git status
   - git commit -m "$TRAVIS_TAG"
-#  - git tag $TRAVIS_TAG
 # Link remote
   - git remote set-url origin https://$GH_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
-  # Fix detached HEAD
+# Fix detached HEAD
   - git branch ${BRANCH}-travis-tmp
   - git checkout ${BRANCH}-travis-tmp
   - git checkout ${BRANCH}
-  - git merge --verbose ${BRANCH}-travis-tmp
+  - git merge ${BRANCH}-travis-tmp
 # Push
-#  - git push --set-upstream origin $BRANCH --tags $TRAVIS_TAG
-  - git push -v --force --set-upstream origin $BRANCH
-  - git status
-  - git log
-
-
+  - git push -q --force --set-upstream origin $BRANCH &>/dev/null
