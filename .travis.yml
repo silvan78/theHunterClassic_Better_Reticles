@@ -1,17 +1,84 @@
-language: perl
-perl:
-  - "5.26"
-os: "linux"
-dist: "bionic"
-install:
-  - cpanm . || cat /home/travis/.cpanm/work/*/build.log
-script:
-# Help test
-  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -h
-# Library reading
-  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
-# Range Card Generation Simulation and comparison with test file (1st line not included)
-  - perl ./Range\ Cards/range_card_parser/src/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/range_card_parser/test/range_card_test.txt
+language: shell
 
+os: "windows"
+
+branches:
+  except:
+    - master
+    - /^untagged/
+    - /^TRAVIS/
+  only:
+    - dev
+    - travis-windows
+    - range_card_parser
+
+cache:
+  directories:
+    - /c/Strawberry
+
+install:
+  - if [[ -f /c/Strawberry/perl/bin/perl ]]; then echo "Strawberry from cache."; else echo "Strawberry missing";chocolatey.exe install StrawberryPerl;fi
+  - export PATH="/c/Strawberry/perl/bin:/c/Strawberry/perl/site/bin:/c/Strawberry/c/bin:$PATH"
+  - export PERL5LIB="/c/Strawberry/perl/lib:/c/Strawberry/perl/site/lib:/c/Strawberry/perl/vendor/lib"
+  - LASTPATH=$(pwd)
+  - cd /c/Strawberry/perl/bin
+  - if [[ -f /c/Strawberry/perl/site/bin/pp.bat ]]; then echo "PP from cache."; else cpanm.bat -f -n pp || cat /c/Users/travis/.cpanm/work/*/build.log;fi
+  - ls /c/Strawberry/perl/site/bin
+  - cd $LASTPATH
+
+before_script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+
+script:
+# Test script
+  - echo "Perl script testing with Strawberry interpreter"
+  # Help test
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -h
+  # Library reading
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
+  # Range Card Generation Simulation and comparison with test file (1st line not included)
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/src/test/range_card_test.txt
+# Make a link for perl script is right place (no symbolic is available here)
+  - rm -f ./Range\ Cards/range_card_parser.pl
+  - ln -f ./Range\ Cards/src/range_card_parser/range_card_parser.pl ./Range\ Cards/range_card_parser.pl
+# Pack into new exe
+  - rm -f ./Range\ Cards/range_card_parser.exe
+  - cd /c/Strawberry/perl/site/bin
+  - pp.bat -o ${LASTPATH}/Range\ Cards/range_card_parser.exe ${LASTPATH}/Range\ Cards/src/range_card_parser/range_card_parser.pl
+  - cd ${LASTPATH}
+  - ls -la ./Range\ Cards/
+# Test exe the same way
+  - echo "Exe testing"
+  # Exe Help test
+  - ./Range\ Cards/range_card_parser.exe -h
+  # Exe Library reading
+  - ./Range\ Cards/range_card_parser.exe -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
+  # Exe Range Card Generation Simulation and comparison with test file (1st line not included)
+  - ./Range\ Cards/range_card_parser.exe -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/src/test/range_card_test.txt
+
+after_success:
+# Setup git
+  - git config --global user.name "Travis-CI"
+  - git config --global user.email "travis@travis-ci.com"
+# Prepare tag
+  - export TRAVIS_TAG="[skip ci] TRAVIS build and commit "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)
+# Add files comit and tag
+  - git add -v -A .
+  - git status
+  - git commit -m "$TRAVIS_TAG"
+#  - git tag $TRAVIS_TAG
+# Link remote
+  - git remote set-url origin https://$GH_TOKEN@github.com/silvan78/theHunterClassic_Better_Reticles.git
+  # Fix detached HEAD
+  - git branch ${BRANCH}-travis-tmp
+  - git checkout ${BRANCH}-travis-tmp
+  - git checkout ${BRANCH}
+  - git merge --verbose ${BRANCH}-travis-tmp
+# Push
+#  - git push --set-upstream origin $BRANCH --tags $TRAVIS_TAG
+  - git push -v --force --set-upstream origin $BRANCH
+  - git status
+  - git log
 
 
