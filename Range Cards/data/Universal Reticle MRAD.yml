@@ -87,7 +87,7 @@ weapon:
         name: .17 HMR
         abbrev: .17 HMR
         scope:
-          3-9x40Anshutz:
+          3-9x40Anschutz:
             ref: M1/.17HMR
             correction:
               150: 0.00
@@ -113,7 +113,7 @@ weapon:
         name: .17 HMR HV
         abbrev: .17 HMRHV
         scope:
-          3-9x40Anshutz:
+          3-9x40Anschutz:
             ref: M1/.17HMRHV
             correction:
               150: 0.00
