@@ -1,61 +1,61 @@
 ---
 scope:
-  3-9x40Anshutz:
-    name: 3-9x40 Anshutz
+  3-9x40Anschutz:
+    name: 3-9x40mm Anschütz Rifle Scope
     refzoom: 9
     type: rifle
     alias: M
   12x56:
-    name: 12x56
+    name: 12x50mm Rifle Scope
     refzoom: 12
     type: rifle
     alias: L
   2-6x32Handgun:
-    name: 2-6x32 Handgun Scope
+    name: 2-6x20mm Handgun Scope
     refzoom: 6
     type: handgun
     alias: S
   5-22x56:
-    name: 5-22x56
+    name: 5.5-22x56mm Rifle Scope
     refzoom: 22
     type: rifle
     alias: L
   2-10x42:
-    name: 2-10x42
+    name: 2-10x42 Rifle Scope
     refzoom: 10
     type: rifle
     alias: M
   4-8x32:
-    name: 4-8x32
+    name: 4-8x32mm Rifle Scope
     refzoom: 8
     type: rifle
     alias: M
-  3-18x42:
-    name: 3-18x42
+  3-18x44:
+    name: 3-18x44mm Rifle Scope
     refzoom: 18
     type: combination
     alias: L
   3x20Muzzle:
-    name: 3x20 Muzzle Loader Scope
+    name: 3x20mm Muzzleloader Scope
     refzoom: 3
     type: muzzleloader
     alias: S
-  2xCrossPis:
+  2xCroPis:
     name: 2x Crossbow Pistol Scope
     refzoom: 2
     type: crossbow pistol
     alias: S
-  IronCrossPis:
+  IronCroPis:
     name: Crossbow Pistol Ironsight
     refzoom: 1
     type: crossbow pistol
     alias: I
   3xTenpoint:
-    name: 3x TenPoint Crossbow Scope
+    name: 3x Tenpoint Crossbow Scope
     refzoom: 3
     type: crossbow
     alias: S
-  IronCross:
+  IronTenpoint:
     name: Tenpoint Crossbow Ironsight
     refzoom: 1
     type: crossbow
@@ -71,19 +71,21 @@ scope:
     type: bow
     alias: B
   5pinPython:
-    name: 5-pin Parker Python Sight with Rangefinder
+    name: 5-Pin Range Finder Bow Sight
     refzoom: 2
     type: bow
     alias: R
 
 weapon:
-  .17-LA:
-    name: .17 Lever Action
+  .17LA:
+    name: .17 HMR Lever Action Rifle
+    abbrev: .17 LA
     index: 1
     type: rifle
-    calibre:
+    ammo:
       .17HMR:
         name: .17 HMR
+        abbrev: .17 HMR
         scope:
           3-9x40Anshutz:
             ref: M1/.17HMR
@@ -107,38 +109,41 @@ weapon:
               275: 0.50
               300: 0.80
               325: 0.90
-    .17HMRHV:
-      name: .17 HMRHV
-      scope:
-        3-9x40Anshutz:
-          ref: M1/.17HMRHV
-          correction:
-            150: 0.00
-            175: 0.00
-            200: 0.00
-            225: 0.10
-            250: 0.10
-            275: 0.18
-            300: 0.20
-            325: 0.30
-        12x56:
-          ref: L1/.17HMRHV
-          correction:
-            150: -0.10
-            175: 0.00
-            200: 0.00
-            225: 0.10
-            250: 0.18
-            275: 0.25
-            300: 0.45
-            325: 0.50
-  .22LRGrashopper:
-    name: .22 Grasshopper Pistol
+      .17HMRHV:
+        name: .17 HMR HV
+        abbrev: .17 HMRHV
+        scope:
+          3-9x40Anshutz:
+            ref: M1/.17HMRHV
+            correction:
+              150: 0.00
+              175: 0.00
+              200: 0.00
+              225: 0.10
+              250: 0.10
+              275: 0.18
+              300: 0.20
+              325: 0.30
+          12x56:
+            ref: L1/.17HMRHV
+            correction:
+              150: -0.10
+              175: 0.00
+              200: 0.00
+              225: 0.10
+              250: 0.18
+              275: 0.25
+              300: 0.45
+              325: 0.50
+  .22Pistol:
+    name: .22 Pistol Grasshopper
+    abbrev: .22 Pis
     type: handgun
     index: 1
-    calibre:
+    ammo:
       .22LR:
-        name: .22LR
+        name: .22 LR Ammunition
+        abbrev: .22 LR
         scope:
           2-6x32Handgun:
             ref: S1/.22LR
@@ -152,12 +157,14 @@ weapon:
               300: 6.65
               325: 7.50
   .223BA:
-    name: .223 Bolt Action
+    name: .223 Bolt Action Rifle
+    abrev: .223 BA
     type: rifle
     index: 1
-    calibre:
+    ammo:
       .223:
-        name: .223 BA
+        name: .223 Nosler Ballistic Tip
+        abbrev: .223
         scope:
           5-22x56:
             ref: L1/.223
@@ -170,13 +177,15 @@ weapon:
               275: 0.38
               300: 0.40
               325: 0.60
-  .223AR15:
-    name: AR15
+  .223SA:
+    name: .223 Semi-Automatic Rifle
+    abbrev: .223 SA
     type: rifle
     index: 2
-    calibre:
+    ammo:
       .223:
-        name: .223 AR15
+        name: .223 Nosler Ballistic Tip
+        abbrev: .223
         scope:
           2-10x42:
             ref: M2/.223
@@ -190,12 +199,14 @@ weapon:
               300: 0.35
               325: 0.40
   .243BA:
-    name: .243 Bolt Action
+    name: .243 Bolt Action Rifle
+    abbrev: .243 BA
     type: rifle
     index: 1
-    calibre:
+    ammo:
       .243:
-        name: .243 BA
+        name: .243 Nosler Ballistic Tip
+        abbrev: .243
         scope:
           2-10x42:
             ref: M1/.243
@@ -209,12 +220,14 @@ weapon:
               300: 0.30
               325: 0.40
   6.5x55BA:
-    name: 6.5x55 Bolt Cation
+    name: 6.5x55 Bolt Action Rifle
+    abbrev: 6.5x55 BA
     type: rifle
     index: 1
-    calibre:
+    ammo:
       6.5x55:
-        name: 6.5x55 BA
+        name: 6.5x55 Nosler AccuBond
+        abbrev: 6.5x55
         scope:
           2-10x42:
             ref: M1/6.5x55
@@ -228,12 +241,14 @@ weapon:
               300: 0.50
               325: 0.60
   .270BA:
-    name: .270 Bolt Cation
+    name: .270 Bolt Action Rifle
+    abbrev: .270 BA
     type: rifle
     index: 1
-    calibre:
+    ammo:
       .270:
-        name: .270 BA
+        name: .270 Nosler Ballistic Tip
+        abbrev: .270
         scope:
           2-10x42:
             ref: M1/.270
@@ -246,13 +261,15 @@ weapon:
               275: 0.38
               300: 0.40
               325: 0.40
-  7mmScout:
-    name: 7mm Steyer Scout
+  7mm-08Scout:
+    name: 7mm-08 Scout Bolt Action Rifle
+    abbrev: 7mm-08 BA
     type: rifle
     index: 1
-    calibre:
-      7mmHP:
-        name: 7mm HP
+    ammo:
+      7mm-08HP:
+        name: 7mm-08 Ammunition (Hp)
+        abbrev: 7mm-08 HP
         scope:
           5-22x56:
             ref: L1/7mmHP
@@ -265,8 +282,9 @@ weapon:
               275: 0.70
               300: 0.90
               325: 1.05
-      7mmHV:
-        name: 7mm HV
+      7mm-08HV:
+        name: 7mm-08 Ammunition (HV)
+        abbrev: 7mm-08 HV
         scope:
           5-22x56:
             ref: L1/7mmHV
@@ -280,24 +298,28 @@ weapon:
               300: 0.50
               325: 0.65
   .30-06LA:
-    name: .30-06 Lever Action
+    name: .30-06 Lever Action Rifle
+    abbrev: .30-06 LA
     type: rifle
     index: 1
-    calibre:
+    ammo:
       .30-06:
-        name: .30-06 LA
+        name: .30-06 Round Nose Ammunition
+        abbrev: .30-06
         scope:
           4-8x32:
             ref: M1/.30-06
             correction:
               200: 0.10
   .300BA:
-    name: .300 Bolt Action
+    name: .300 Bolt Action Rifle
+    abbrev: .300 BA
     type: rifle
     index: 1
-    calibre:
+    ammo:
       .300:
-        name: .300 BA
+        name: .300 Nosler AccuBond
+        abbrev: .300
         scope:
           5-22x56:
             ref: L1/.300
@@ -310,51 +332,57 @@ weapon:
               275: 0.68
               300: 0.70
               325: 0.80
-  8x57Anshutz:
-    name: 8x57 Anshutz 1760 IS
+  8x57Anschutz:
+    name: 8x57 IS Anschütz 1780 D FL Bolt Action Rifle
+    abbrev: 8x57 BA
     type: rifle
     index: 1
-    calibre:
+    ammo:
       8x57:
-      name: 8x57
-      scope:
-        5-22x56:
-          ref: L1/8x57
-          correction:
-            150: 0.10
-            175: 0.20
-            200: 0.40
-            225: 0.60
-            250: 0.80
-            275: 0.95
-            300: 1.10
-            325: 1.20
+        name: 8x57 IS Nosler Partition
+        abbrev: 8x57
+        scope:
+          5-22x56:
+            ref: L1/8x57
+            correction:
+              150: 0.10
+              175: 0.20
+              200: 0.40
+              225: 0.60
+              250: 0.80
+              275: 0.95
+              300: 1.10
+              325: 1.20
   .357Handgun:
     name: .357 Revolver
+    abbrev: .357
     type: handgun
     index: 1
-    calibre:
+    ammo:
       .357:
-      name: .357
-      scope:
-        2-6x32Handgun:
-          ref: S1/.357
-          correction:
-            150: 0.50
-            175: 0.75
-            200: 0.95
-            225: 1.20
-            250: 1.35
-            275: 1.55
-            300: 1.75
-            325: 2.05
-  9.3x74RDryling:
-    name: 9.3x74R Driling Gun
+        name: .357 Nosler Sporting Handgun
+        abbrev: .357
+        scope:
+          2-6x32Handgun:
+            ref: S1/.357
+            correction:
+              150: 0.50
+              175: 0.75
+              200: 0.95
+              225: 1.20
+              250: 1.35
+              275: 1.55
+              300: 1.75
+              325: 2.05
+  9.3x74RDrilling:
+    name: 16GA/9.3x74R Drilling Combination Gun
+    abbrev: Drilling
     type: combination
     index: 1
-    calibre:
+    ammo:
       9.3x74R:
-        name: 9.3x74R Dryl
+        name: 9.3x74R Ammunition
+        abbrev: 9.3x74R
         scope:
           3-18x42:
             ref: L1/9.3x74R
@@ -369,11 +397,13 @@ weapon:
               325: 1.65
   .44Revolver:
     name: .44 Revolver
+    abbrev: .44
     type: handgun
     index: 1
-    calibre:
+    ammo:
       .44:
-        name: .44
+        name: .44 Nosler Sporting Handgun
+        abbrev: .44
         scope:
           2-6x32Handgun:
             ref: S1/.44
@@ -387,12 +417,14 @@ weapon:
               300: 2.30
               325: 2.60
   .454Revolver:
-    name: .454 Revolver
+    name: .454 Revolver (El Torro/El Bisonte)
+    abbrev: .454
     type: handgun
     index: 1
-    calibre:
+    ammo:
       .454:
-        name: .454
+        name: .454 Nosler Custom Handgun
+        abbrev: .454
         scope:
           2-6x32Handgun:
             ref: S1/.454
@@ -406,30 +438,150 @@ weapon:
               300: 1.95
               325: 2.30
   45-70LA:
-    name: 45-70 Lever Action
+    name: .45-70 Government Lever Action Rifle
+    abbrev: 45-70 LA
     type: rifle
     index: 1
-    calibre:
+    ammo:
       45-70:
-      name: 45-70 Gov
-      scope:
-        5-22x56:
-          ref: L1/45-70
-          correction:
-            150: 0.30
-            175: 0.40
-            200: 0.60
-            225: 0.70
-            250: 0.90
-            275: 1.18
-            300: 1.30
-            325: 1.40
-# S1/.50G,.50 Cap Lock,150,0.??,175,0.??,200,0.40,225,0.55,250,0.80,275,?.??,300,?.??,325,?.??
-# S1/TenPoint,TenPoint Crossbow,10,-0.30,20,0.00,30,0.40,40,0.80,50,1.35,60,1.65,80,2.50,100,3.50,150,6.60,175,8.40,200,10.70,225,13.10,250,,275,,300,,325,
-# S2/CroPis,Crossbow Pistol,10,0.10,20,0.40,30,0.65,40,1.00,50,1.30,60,1.50,80,2.10,100,2.80
-# I2/CroPis,Crossbow Pistol,10,,20,,30,,40,,50,,60,,80,,100,
-# I1/TenPoint,TenPoint Crossbow,10,-0.20,20,0.00,30,0.30,40,0.50,50,0.95,60,,80,,100,
-# B1/Snakebite,Snakebite Bow,10,-1.00,20,0.00,30,0.45,40,1.00,50,1.30,60,1.80,80,3.00,100,3.80
-# B2/Python,Parker Python Bow,10,-2.00,20,-1.20,30,-0.70,40,0.00,50,0.60,60,1.35,80,2.35,100,3.40
-# R2/Python,Parker Python Bow,10,-2.00,20,-1.50,30,-0.90,40,0.00,50,0.70,60,1.40,80,3.00,100,4.40
-
+        name: .45-70 Government
+        abbrev: 45-70 Gov
+        scope:
+          5-22x56:
+            ref: L1/45-70
+            correction:
+              150: 0.30
+              175: 0.40
+              200: 0.60
+              225: 0.70
+              250: 0.90
+              275: 1.18
+              300: 1.30
+              325: 1.40
+  .50CLM:
+    name: .50 Cap Lock Muzzleloader
+    abbrev: .50G
+    type: muzzleloader
+    index: 1
+    ammo:
+      .50:
+        name: .50 Patched Round Ball
+        abbrev: .50
+        scope:
+          3x20Muzzle:
+            ref: S1/.50G
+            correction:
+              200: 0.40
+              225: 0.55
+              250: 0.80
+  Tenpoint:
+    name: Tenpoint Carbon Fusion Crossbow
+    abbrev: TenPoint
+    type: crossbow
+    index: 1
+    ammo:
+      arrow:
+        name: Crossbow Arrows
+        abbrev: Arrow
+        scope:
+          3xTenpoint:
+            ref: S1/TenPoint
+            correction:
+              10: -0.30
+              20: 0.00
+              30: 0.40
+              40: 0.80
+              50: 1.35
+              60: 1.65
+              80: 2.50
+              100: 3.50
+              150: 6.60
+              175: 8.40
+              200: 10.70
+              225: 13.10
+          IronTenpoint:
+            ref: I1/TenPoint
+            correction:
+              10: -0.20
+              20: 0.00
+              30: 0.30
+              40: 0.50
+              50: 0.95
+  CroPis:
+    name: Crossbow Pistol
+    abbrev: Cros Pist
+    type: crossbow
+    index: 2
+    ammo:
+      arrow:
+        name: Crossbow Bolt
+        abbrev: bolt
+        scope:
+          2xCrossPis:
+            ref: S2/CroPis
+            correction:
+              10: 0.10
+              20: 0.40
+              30: 0.65
+              40: 1.00
+              50: 1.30
+              60: 1.50
+              80: 2.10
+              100: 2.80
+          IronCroPis:
+            ref: I2/CroPis
+            correction:
+              10: ?.??
+  Snakebite:
+    name: Compound Bow "Snakebite"
+    abbrev: Snake Bow
+    tye: bow
+    index: 1
+    ammo:
+      arrow:
+        name: Compound Arrows
+        abbrev: arrow
+        scope:
+          1pinSnake:
+            ref: B1/Snakebite
+            correction:
+              10: -1.00
+              20: 0.00
+              30: 0.45
+              40: 1.00
+              50: 1.30
+              60: 1.80
+              80: 3.00
+              100: 3.80
+  ParkerPython:
+    name: Compound Bow "Parker Python"
+    abbrev: Python Bow
+    tye: bow
+    index: 2
+    ammo:
+      arrow:
+        name: Compound Arrows
+        abbrev: arrow
+        scope:
+          3pinPython:
+            ref: B2/Python
+            correction:
+              10: -2.00
+              20: -1.20
+              30: -0.70
+              40: 0.00
+              50: 0.60
+              60: 1.35
+              80: 2.35
+              100: 3.40
+          5pinPython:
+            ref: R2/Python
+            correction:
+              10: -2.00
+              20: -1.50
+              30: -0.90
+              40: 0.00
+              50: 0.70
+              60: 1.40
+              80: 3.00
+              100: 4.40
