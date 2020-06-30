@@ -1,9 +1,9 @@
-#!/e/opt/Perl/perl/bin/perl
+#!/c/opt/Perl/perl/bin/perl
 
-use YAML::XS;
-use Data::Dumper;
+use YAML::XS qw{LoadFile};
+use Data::Dumper qw{Dumper};
 
-my $arrayref=YAML::XS::LoadFile("../../data/Universal Reticle MRAD.yml");
+my $arrayref=LoadFile("../../data/Universal Reticle MRAD.yml");
 
 my $scopes=$arrayref->{'scope'};
 my $weapons=$arrayref->{'weapon'};
@@ -26,14 +26,19 @@ foreach $weapon (sort keys %{$weapons}) {
 };
 print "\n";
 
-print "Sets (weapon/ammo/scope):\n\t";
+print "Sets (weapon/ammo/scope   ranges):\n";
+my $corrections;
 foreach $weapon (sort keys %{$weapons}) {
     foreach $ammo (sort keys %{$weapons->{$weapon}->{'ammo'}}) {
         foreach $scope (sort keys %{$weapons->{$weapon}->{'ammo'}->{$ammo}->{'scope'}}) {
-            push(@tmp_pairs,$weapon."/".$ammo."/".$scope);
+            $corrections=join(',',sort { $a <=> $b } keys %{$weapons->{$weapon}->{'ammo'}->{$ammo}->{'scope'}->{$scope}->{'correction'}});
+            push(@tmp_pairs,$weapon."/".$ammo."/".$scope,$corrections);
         }
 
     }
 }
-print join("\n\t",@tmp_pairs),"\n";
+my $i;
+for ($i=0;$i<=$#tmp_pairs;$i=$i+2) {
+    printf("\t%-35s    %s\n",$tmp_pairs[$i],$tmp_pairs[$i+1]);
+}
 

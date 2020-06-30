@@ -517,7 +517,7 @@ weapon:
         name: Crossbow Bolt
         abbrev: bolt
         scope:
-          2xCrossPis:
+          2xCroPis:
             ref: S2/CroPis
             correction:
               10: 0.10
