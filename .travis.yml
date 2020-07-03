@@ -50,7 +50,7 @@ script:
   # Exe Help test
   - ./Range\ Cards/range_card_parser.exe -h
   # Exe Library reading
-  - ./Range\ Cards/range_card_parser.exe -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt
+  - ./Range\ Cards/range_card_parser.exe -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.yml
   # Exe Range Card Generation Simulation and comparison with test file (1st line not included)
   - ./Range\ Cards/range_card_parser.exe -rl 150,200,250 -rs 10,20 -c ".223BA/.223/5-22x56" "Tenpoint/Arrow/3xTenpoint" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.yml -s|tail -n 9| diff - ./Range\ Cards/src/test/range_card_test.txt
 
