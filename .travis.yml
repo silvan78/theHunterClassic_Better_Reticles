@@ -23,6 +23,7 @@ install:
   - LASTPATH=$(pwd)
   - cd /c/Strawberry/perl/bin
   - if [[ -f /c/Strawberry/perl/site/bin/pp.bat ]]; then echo "PP from cache."; else cpanm.bat -f -n pp || cat /c/Users/travis/.cpanm/work/*/build.log;fi
+  - if [[ -f /c/Strawberry/perl/vendor/lib/YAML/XS.pm ]]; then echo "YAML::XS from cache."; else cpanm.bat -f -n YAML::XS || cat /c/Users/travis/.cpanm/work/*/build.log;fi
   - ls /c/Strawberry/perl/site/bin
   - cd $LASTPATH
 
@@ -36,9 +37,9 @@ script:
   # Help test
   - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -h
   # Library reading
-  - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.yml
   # Range Card Generation Simulation and comparison with test file (1st line not included)
-  - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/src/test/range_card_test.txt
+  - /c/Strawberry/perl/bin/perl ./Range\ Cards/src/range_card_parser/range_card_parser.pl -rl 150,200,250 -rs 10,20 -c ".223BA/.223/5-22x56" "Tenpoint/Arrow/3xTenpoi nt" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.yml -s|tail -n 9| diff - ./Range\ Cards/src/test/range_card_test.txt
 # Make a link for perl script is right place (no symbolic is available here)
   - rm -f ./Range\ Cards/range_card_parser.pl
   - ln -f ./Range\ Cards/src/range_card_parser/range_card_parser.pl ./Range\ Cards/range_card_parser.pl
@@ -53,9 +54,9 @@ script:
   # Exe Help test
   - ./Range\ Cards/range_card_parser.exe -h
   # Exe Library reading
-  - ./Range\ Cards/range_card_parser.exe -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt
+  - ./Range\ Cards/range_card_parser.exe -l -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt
   # Exe Range Card Generation Simulation and comparison with test file (1st line not included)
-  - ./Range\ Cards/range_card_parser.exe -rl 150,200,250 -rs 10,20 -c "B1/SNAKEBITE" "L1/45-70" "M1/.243" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.txt -ii ./Range\ Cards/data/Universal\ Reticle\ MRAD\ legend.txt -s|tail -n 8| diff - ./Range\ Cards/src/test/range_card_test.txt
+  - ./Range\ Cards/range_card_parser.exe -rl 150,200,250 -rs 10,20 -c ".223BA/.223/5-22x56" "Tenpoint/Arrow/3xTenpoi nt" -i ./Range\ Cards/data/Universal\ Reticle\ MRAD.yml -s|tail -n 9| diff - ./Range\ Cards/src/test/range_card_test.txt
 
 after_success:
 # Setup git
