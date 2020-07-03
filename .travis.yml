@@ -7,10 +7,6 @@ branches:
     - master
     - /^untagged/
     - /^TRAVIS/
-  only:
-    - dev
-    - travis-windows
-    - range_card_parser
 
 cache:
   directories:
