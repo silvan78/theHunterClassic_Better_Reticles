@@ -5,7 +5,7 @@ use strict;
 use POSIX qw(strftime);
 use YAML::XS qw{LoadFile};
 
-my $version="1.1";
+my $version="1.2";
 
 my $today = strftime"%Y%m%d", localtime;
 my %setup=();
