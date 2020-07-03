@@ -94,7 +94,7 @@ scope:
 weapon:
   .17LA:
     name: .17 HMR Lever Action Rifle
-    abbrev: .17 LA
+    abbrev: LA
     index: 1
     type: rifle
     ammo:
@@ -152,7 +152,7 @@ weapon:
               325: 0.50
   .22Pistol:
     name: .22 Pistol Grasshopper
-    abbrev: .22 Pis
+    abbrev: Pis
     type: handgun
     index: 1
     ammo:
@@ -173,7 +173,7 @@ weapon:
               325: 7.50
   .223BA:
     name: .223 Bolt Action Rifle
-    abrev: .223 BA
+    abbrev: BA
     type: rifle
     index: 1
     ammo:
@@ -194,7 +194,7 @@ weapon:
               325: 0.60
   .223SA:
     name: .223 Semi-Automatic Rifle
-    abbrev: .223 SA
+    abbrev: SA
     type: rifle
     index: 2
     ammo:
@@ -215,7 +215,7 @@ weapon:
               325: 0.40
   .243BA:
     name: .243 Bolt Action Rifle
-    abbrev: .243 BA
+    abbrev: BA
     type: rifle
     index: 1
     ammo:
@@ -236,7 +236,7 @@ weapon:
               325: 0.40
   6.5x55BA:
     name: 6.5x55 Bolt Action Rifle
-    abbrev: 6.5x55 BA
+    abbrev: BA
     type: rifle
     index: 1
     ammo:
@@ -257,7 +257,7 @@ weapon:
               325: 0.60
   .270BA:
     name: .270 Bolt Action Rifle
-    abbrev: .270 BA
+    abbrev: BA
     type: rifle
     index: 1
     ammo:
@@ -278,7 +278,7 @@ weapon:
               325: 0.40
   7mm-08Scout:
     name: 7mm-08 Scout Bolt Action Rifle
-    abbrev: 7mm-08 BA
+    abbrev: Scout
     type: rifle
     index: 1
     ammo:
@@ -314,7 +314,7 @@ weapon:
               325: 0.65
   .30-06LA:
     name: .30-06 Lever Action Rifle
-    abbrev: .30-06 LA
+    abbrev: LA
     type: rifle
     index: 1
     ammo:
@@ -328,7 +328,7 @@ weapon:
               200: 0.10
   .300BA:
     name: .300 Bolt Action Rifle
-    abbrev: .300 BA
+    abbrev: BA
     type: rifle
     index: 1
     ammo:
@@ -349,7 +349,7 @@ weapon:
               325: 0.80
   8x57Anschutz:
     name: 8x57 IS Anschütz 1780 D FL Bolt Action Rifle
-    abbrev: 8x57 BA
+    abbrev: BA
     type: rifle
     index: 1
     ammo:
@@ -370,7 +370,7 @@ weapon:
               325: 1.20
   .357Handgun:
     name: .357 Revolver
-    abbrev: .357
+    abbrev: Revolver
     type: handgun
     index: 1
     ammo:
@@ -412,7 +412,7 @@ weapon:
               325: 1.65
   .44Revolver:
     name: .44 Revolver
-    abbrev: .44
+    abbrev: Revolver
     type: handgun
     index: 1
     ammo:
@@ -433,7 +433,7 @@ weapon:
               325: 2.60
   .454Revolver:
     name: .454 Revolver (El Torro/El Bisonte)
-    abbrev: .454
+    abbrev: Revolver
     type: handgun
     index: 1
     ammo:
@@ -454,7 +454,7 @@ weapon:
               325: 2.30
   45-70LA:
     name: .45-70 Government Lever Action Rifle
-    abbrev: 45-70 LA
+    abbrev: LA
     type: rifle
     index: 1
     ammo:
@@ -475,7 +475,7 @@ weapon:
               325: 1.40
   .50CLM:
     name: .50 Cap Lock Muzzleloader
-    abbrev: .50G
+    abbrev: Muzzleloader
     type: muzzleloader
     index: 1
     ammo:
