@@ -7,7 +7,7 @@ Structure:<br />
 <li>/Reticle Templates - Saved screenshots cleaned for initial reticle edition in GIMP.
 <li>/Simple Reticles - Oprics reticles with 150-300 range ticks added (max zoom is reference zoom).
 <li>/Advanced Reticles - MRAD-like short/long (5-12MRAD vertical) reticle to use with range card.
-<li>/Range Cards - TXT files for different weapon setups (caliber + optics), final range card should be compiled from this library. 
+<li>/Range Cards - YAML file for different weapon setups (caliber + optics), final range card should be compiled from this library. 
 </ul>
 
 <h3>Installation</h3>
