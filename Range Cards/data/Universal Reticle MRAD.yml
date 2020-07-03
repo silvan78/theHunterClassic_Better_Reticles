@@ -2,76 +2,91 @@
 scope:
   3-9x40Anschutz:
     name: 3-9x40mm Anschütz Rifle Scope
+    abbrev: 3-9x40
     refzoom: 9
     type: rifle
     alias: M
   12x56:
     name: 12x50mm Rifle Scope
+    abbrev: 12x50
     refzoom: 12
     type: rifle
     alias: L
   2-6x32Handgun:
     name: 2-6x20mm Handgun Scope
+    abbrev: 2-6x20
     refzoom: 6
     type: handgun
     alias: S
   5-22x56:
     name: 5.5-22x56mm Rifle Scope
+    abbrev: 5-22x56
     refzoom: 22
     type: rifle
     alias: L
   2-10x42:
     name: 2-10x42 Rifle Scope
+    abbrev: 2-10x42
     refzoom: 10
     type: rifle
     alias: M
   4-8x32:
     name: 4-8x32mm Rifle Scope
+    abbrev: 4-8x32
     refzoom: 8
     type: rifle
     alias: M
   3-18x44:
     name: 3-18x44mm Rifle Scope
+    abbrev: 3-18x44
     refzoom: 18
     type: combination
     alias: L
   3x20Muzzle:
     name: 3x20mm Muzzleloader Scope
+    abbrev: 3x20
     refzoom: 3
     type: muzzleloader
     alias: S
   2xCroPis:
     name: 2x Crossbow Pistol Scope
+    abbrev: 2x
     refzoom: 2
     type: crossbow pistol
     alias: S
   IronCroPis:
     name: Crossbow Pistol Ironsight
+    abbrev: Ironsight
     refzoom: 1
     type: crossbow pistol
     alias: I
   3xTenpoint:
     name: 3x Tenpoint Crossbow Scope
+    abbrev: 3x
     refzoom: 3
     type: crossbow
     alias: S
   IronTenpoint:
     name: Tenpoint Crossbow Ironsight
+    abbrev: Ironsight
     refzoom: 1
     type: crossbow
     slias: I
   1pinSnake:
     name: 1-pin SnakeBite Sight
+    abbrev: 1-pin
     refzoom: 2
     type: bow
     alias: B
   3pinPython:
     name: 3-pin Parker Python Sight
+    abbrev: 3-pin
     refzoom: 2
     type: bow
     alias: B
   5pinPython:
     name: 5-Pin Range Finder Bow Sight
+    abbrev: 5-pin
     refzoom: 2
     type: bow
     alias: R
