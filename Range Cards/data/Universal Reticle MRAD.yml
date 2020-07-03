@@ -480,7 +480,7 @@ weapon:
     type: crossbow
     index: 1
     ammo:
-      arrow:
+      Arrow:
         name: Crossbow Arrows
         abbrev: Arrow
         scope:
@@ -513,9 +513,9 @@ weapon:
     type: crossbow
     index: 2
     ammo:
-      arrow:
+      Arrow:
         name: Crossbow Bolt
-        abbrev: bolt
+        abbrev: Bolt
         scope:
           2xCroPis:
             ref: S2/CroPis
@@ -538,9 +538,9 @@ weapon:
     tye: bow
     index: 1
     ammo:
-      arrow:
+      Arrow:
         name: Compound Arrows
-        abbrev: arrow
+        abbrev: Arrow
         scope:
           1pinSnake:
             ref: B1/Snakebite
@@ -559,9 +559,9 @@ weapon:
     tye: bow
     index: 2
     ammo:
-      arrow:
+      Arrow:
         name: Compound Arrows
-        abbrev: arrow
+        abbrev: Arrow
         scope:
           3pinPython:
             ref: B2/Python
