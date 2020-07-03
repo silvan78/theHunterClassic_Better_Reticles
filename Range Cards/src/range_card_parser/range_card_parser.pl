@@ -1,23 +1,25 @@
-#!/usr/bin/perl
+#!/c/opt/Perl/perl/bin/perl
+
 use warnings;
 use strict;
 use POSIX qw(strftime);
+use YAML::XS qw{LoadFile};
 
-my $version="1.01";
+my $version="1.1";
 
 my $today = strftime"%Y%m%d", localtime;
 my %setup=();
-my %lib_name=();
-my %lib_correction=();
 my $item;
 my $range;
 my @LongRangeLines;
 my @ShortRangeLines;
 my $z;
+my $weapons;
+my $scopes;
+
 
 # Defaults
-$setup{'library'} = 'data/Universal Reticle MRAD.txt';
-$setup{'library_legend'} = 'data/Universal Reticle MRAD legend.txt';
+$setup{'library'} = 'data/Universal Reticle MRAD.yml';
 $setup{'output_file'} = 'hunt/range_card.txt';
 $setup{'item_list'} = [];
 $setup{'range_list_long'} = [150,175,200,225,250,275,300,325];
@@ -40,7 +42,7 @@ GetArgs();
 my @LongRangeItems=();
 foreach $item (@{$setup{'item_list'}}) {
     foreach $range (sort @{$setup{'range_list_long'}}) {
-        if (defined $lib_correction{$item}{$range}) {
+        if (defined GetRange($item,$range)) {
             push(@LongRangeItems,$item);
             last;
         }
@@ -50,7 +52,7 @@ foreach $item (@{$setup{'item_list'}}) {
 my @ShortRangeItems=();
 foreach $item (@{$setup{'item_list'}}) {
     foreach $range (sort @{$setup{'range_list_short'}}) {
-        if (defined $lib_correction{$item}{$range}) {
+        if (defined GetRange($item,$range)) {
             push(@ShortRangeItems,$item);
             last;
         }
@@ -59,53 +61,61 @@ foreach $item (@{$setup{'item_list'}}) {
 
 # Preparing range card print
 @LongRangeLines=();
-@ShortRangeLines=();
-push(@LongRangeLines,"     ");
-push(@LongRangeLines,"     ");
-push(@LongRangeLines,"LONG ");
-push(@LongRangeLines,"----+");
-foreach $range (@{$setup{'range_list_long'}}){
-    push(@LongRangeLines,FormatRangeLong($range)."|");
-}
-foreach $item (@LongRangeItems) {
-    $LongRangeLines[0].=ItemCode($item);
-    $LongRangeLines[1].=FormatName1stLine($lib_name{$item});
-    $LongRangeLines[2].=FormatName2ndLine($lib_name{$item});
-    $LongRangeLines[3].="------";
-    for ($z=0;$z<=$#{$setup{'range_list_long'}};$z++) {
-        $range=$setup{'range_list_long'}[$z];
-        $LongRangeLines[$z+4].=FormatCorrection($lib_correction{$item}{$range});
+if ($#LongRangeItems >= 0) {
+    push(@LongRangeLines,"     ");
+    push(@LongRangeLines,"     ");
+    push(@LongRangeLines,"LONG ");
+    push(@LongRangeLines,"----+");
+    foreach $range (@{$setup{'range_list_long'}}){
+        push(@LongRangeLines,FormatRangeLong($range)."|");
+    }
+    foreach $item (@LongRangeItems) {
+        $LongRangeLines[0].=ItemName($item);
+        $LongRangeLines[1].=FormatName1stLine($item);
+        $LongRangeLines[2].=FormatName2ndLine($item);
+        $LongRangeLines[3].="------";
+        for ($z=0;$z<=$#{$setup{'range_list_long'}};$z++) {
+            $range=$setup{'range_list_long'}[$z];
+            $LongRangeLines[$z+4].=FormatCorrection(GetRange($item,$range));
+        }
     }
 }
-push(@ShortRangeLines,"     ");
-push(@ShortRangeLines,"     ");
-push(@ShortRangeLines,"SHORT");
-push(@ShortRangeLines,"----+");
-foreach $range (@{$setup{'range_list_short'}}){
-    push(@ShortRangeLines,FormatRangeShort($range)."|");
-}
-foreach $item (@ShortRangeItems) {
-    $ShortRangeLines[0].=ItemCode($item);
-    $ShortRangeLines[1].=FormatName1stLine($lib_name{$item});
-    $ShortRangeLines[2].=FormatName2ndLine($lib_name{$item});
-    $ShortRangeLines[3].="------";
-    for ($z=0;$z<=$#{$setup{'range_list_short'}};$z++) {
-        $range=$setup{'range_list_short'}[$z];
-        $ShortRangeLines[$z+4].=FormatCorrection($lib_correction{$item}{$range});
+
+@ShortRangeLines=();
+if ($#ShortRangeItems >= 0) {
+    push(@ShortRangeLines,"     ");
+    push(@ShortRangeLines,"     ");
+    push(@ShortRangeLines,"SHORT");
+    push(@ShortRangeLines,"----+");
+    foreach $range (@{$setup{'range_list_short'}}){
+        push(@ShortRangeLines,FormatRangeShort($range)."|");
+    }
+    foreach $item (@ShortRangeItems) {
+        $ShortRangeLines[0].=ItemName($item);
+        $ShortRangeLines[1].=FormatName1stLine($item);
+        $ShortRangeLines[2].=FormatName2ndLine($item);
+        $ShortRangeLines[3].="------";
+        for ($z=0;$z<=$#{$setup{'range_list_short'}};$z++) {
+            $range=$setup{'range_list_short'}[$z];
+            $ShortRangeLines[$z+4].=FormatCorrection(GetRange($item,$range));
+        }
     }
 }
 
 # Deciding which has more lines (to fill with appropriate number of space shorter output)
 my $filler;
-if ($#LongRangeLines > $#ShortRangeLines) {
-    $filler=sprintf("%*s",length($ShortRangeLines[3]),"");
-    foreach $z ($#LongRangeLines-$#ShortRangeLines .. $#LongRangeLines) {
-        push(@ShortRangeLines,$filler);
+if ( ($#LongRangeItems >= 0) and ($#ShortRangeItems >= 0)) {
+    if ($#LongRangeLines > $#ShortRangeLines) {
+        $filler = sprintf("%*s", length($ShortRangeLines[3]), "");
+        foreach $z ($#LongRangeLines - $#ShortRangeLines .. $#LongRangeLines) {
+            push(@ShortRangeLines, $filler);
+        }
     }
-} elsif ($#LongRangeLines < $#ShortRangeLines) {
-    $filler=sprintf("%*s",length($LongRangeLines[3]),"");
-    foreach $z ($#ShortRangeLines-$#LongRangeLines .. $#ShortRangeLines) {
-        push(@LongRangeLines,$filler);
+    elsif ($#LongRangeLines < $#ShortRangeLines) {
+        $filler = sprintf("%*s", length($LongRangeLines[3]), "");
+        foreach $z ($#ShortRangeLines - $#LongRangeLines .. $#ShortRangeLines) {
+            push(@LongRangeLines, $filler);
+        }
     }
 }
 
@@ -117,15 +127,75 @@ if ($setup{'simulate'} == 0) {
      open $out,">&",\*STDOUT or die "ERROR: Cannot write to STDOUT. Exiting.";
 }
 print {$out} "Universal Reticle MRAD Range Card $today\n\n";
-foreach $z (0..$#LongRangeLines){
-    print {$out} "$LongRangeLines[$z]    $ShortRangeLines[$z]\n"
-}
+if ($#LongRangeItems >=0) {
+    foreach $z (0 .. $#LongRangeLines) {
+        print {$out} "$LongRangeLines[$z]";
+        if ($#ShortRangeItems >=0) {
+            print {$out} "    $ShortRangeLines[$z]"
+        }
+        print {$out} "\n";
+    }
+} else {
+    foreach $z (0 .. $#ShortRangeLines) {
+        print {$out} "$ShortRangeLines[$z]\n";
+    }
 
+}
 
 
 #######
 # Subs
 #######
+sub GetWeapon {
+    my $GW_in = shift @_;
+    return ${SplitItem($GW_in)}[0];
+}
+
+sub GetAmmo {
+    my $GA_in = shift @_;
+    return ${SplitItem($GA_in)}[1];
+}
+
+sub GetScope {
+    my $GS_in = shift @_;
+    return ${SplitItem($GS_in)}[2];
+}
+
+sub GetRange {
+    my @GR_in=@_;
+    my @GR_tmp=@GR_in;
+    my $GR_item = shift @GR_in;
+    my $GR_range = shift @GR_in;
+    my $GR_weapon;
+    my $GR_ammo;
+    my $GR_scope;
+
+    if (length($GR_range) <1) {
+        print "ERROR: Calling GetRange with not enough arguments (",join(',',@GR_tmp),"). Exiting.\n";
+        exit(1);
+    } else {
+        $GR_weapon = GetWeapon($GR_item);
+        $GR_ammo = GetAmmo($GR_item);
+        $GR_scope = GetScope($GR_item);
+    }
+    if (defined $weapons->{$GR_weapon}->{'ammo'}->{$GR_ammo}->{'scope'}->{$GR_scope}->{'correction'}->{$GR_range}) {
+        return $weapons->{$GR_weapon}->{'ammo'}->{$GR_ammo}->{'scope'}->{$GR_scope}->{'correction'}->{$GR_range};
+    } else {
+        return undef;
+    }
+}
+
+sub SplitItem {
+    my $SI_in=shift @_;
+    my @SI_tbl;
+    @SI_tbl=split('/',$SI_in);
+    if ($#SI_tbl < 2) {
+        print "ERROR: SplitItems input missing elements (",$SI_in,"). Exiting.\n";
+        exit(1);
+    }
+    return \@SI_tbl;
+}
+
 sub FormatRangeLong {
     return sprintf("%4d",shift @_);
 }
@@ -147,16 +217,22 @@ sub FormatCorrection {
 }
 
 sub FormatName1stLine {
-    my $FNin=shift @_;
-    my @FNtbl=split(' ',$FNin);
+    my $FN_in=shift @_;
+    my $FN_weapon=GetWeapon($FN_in);
+    my $FN_ammo=GetAmmo($FN_in);
+    my $FN_name=$weapons->{$FN_weapon}->{'ammo'}->{$FN_ammo}->{'abbrev'};
+    my @FNtbl=split(' ',$FN_name);
+
     return " ".sprintf("%5s",substr($FNtbl[0],0,5));
 }
 
 sub FormatName2ndLine {
-    my $FNin=shift @_;
-    my @FNtbl;
-    if ($FNin=~/ /) {
-        @FNtbl = split(' ', $FNin);
+    my $FN_in=shift @_;
+    my $FN_weapon=GetWeapon($FN_in);
+    my $FN_ammo=GetAmmo($FN_in);
+    my $FN_name=$weapons->{$FN_weapon}->{'ammo'}->{$FN_ammo}->{'abbrev'};
+    if ($FN_name=~/ /) {
+        my @FNtbl = split(' ', $FN_name);
         @FNtbl = splice @FNtbl, 1, $#FNtbl;
         return " " . sprintf("%5s", substr(join(' ', @FNtbl), 0, 5));
     } else {
@@ -168,15 +244,23 @@ sub FormatName {
     my $FNin=shift @_;
     return " ".sprintf("%5s",substr($FNin,0,5));
 }
+
 sub ItemCode {
-    my $ICin=shift @_;
-    my @ICtmp=split('/',$ICin,-1);
-    return "  (".$ICtmp[0].")";
+    my $IC_in = shift @_;
+    my $IC_weapon = GetWeapon($IC_in);
+    my $IC_scope = GetScope($IC_in);
+    my $IC_out = $scopes->{$IC_scope}->{'alias'};
+    $IC_out.=$weapons->{$IC_weapon}->{'index'};
+    return $IC_out;
 }
+
 sub ItemName {
-    my $INin=shift @_;
-    my @INtmp=split('/',$INin,-1);
-    return $INtmp[1];
+    my $IN_in=shift @_;
+    my $IN_weapon=GetWeapon($IN_in);
+    #my @IN_tbl=split(' ',$weapons->{$IN_weapon}->{'abbrev'});
+    my $IN_name=$weapons->{$IN_weapon}->{'abbrev'};
+    $IN_name=~s/ //g;
+    return " ".sprintf("%5s",substr($IN_name,0,5));
 }
 
 sub toUpper {
@@ -186,25 +270,38 @@ sub toUpper {
 }
 
 sub ReadLibrary {
-    my $i;
-    my @RLtmp_tbl;
-    my $RLline;
-    my $RLfh;
+    # my $i;
+    # my @RLtmp_tbl;
+    # my $RLline;
+    # my $RLfh;
 
-    open $RLfh,$setup{'library'} or die "ERROR: Cannot open library file (".$setup{'library'}."). Exiting.";
-    while ($RLline=<$RLfh>) {
-        @RLtmp_tbl=[];
-        $RLline=~tr/[\r\n]//d;
-        if ($RLline=~/,/){
-            @RLtmp_tbl=split(',',$RLline,-1);
-            $RLtmp_tbl[0]=toUpper($RLtmp_tbl[0]);
-            $lib_name{$RLtmp_tbl[0]} = $RLtmp_tbl[1];
-            for ($i=2;$i<=$#RLtmp_tbl;$i=$i+2) {
-                $lib_correction{$RLtmp_tbl[0]}{$RLtmp_tbl[$i]} = $RLtmp_tbl[$i+1];
-                #print $RLtmp_tbl[0]," ",$lib_name{$RLtmp_tbl[0]}," ",$RLtmp_tbl[$i]," [",$lib_correction{$RLtmp_tbl[0]}{$RLtmp_tbl[$i]},"]\n";
-            }
-        }
+    my $yamlref=LoadFile($setup{'library'}) or die "ERROR: Cannot open library file (".$setup{'library'}."). Exiting.";
+
+    $scopes=$yamlref->{'scope'};
+    $weapons=$yamlref->{'weapon'};
+    if (length($weapons) < 1 ) {
+        print "ERROR: No weapons in library (".$setup{'library'}."). Exiting.\n";
+        exit(1);
     }
+    if (length($scopes) < 1 ) {
+        print "ERROR: No scopes in library (".$setup{'library'}."). Exiting.\n";
+        exit(1);
+    }
+
+    # open $RLfh,$setup{'library'} or die "ERROR: Cannot open library file (".$setup{'library'}."). Exiting.";
+    # while ($RLline=<$RLfh>) {
+    #     @RLtmp_tbl=[];
+    #     $RLline=~tr/[\r\n]//d;
+    #     if ($RLline=~/,/){
+    #         @RLtmp_tbl=split(',',$RLline,-1);
+    #         $RLtmp_tbl[0]=toUpper($RLtmp_tbl[0]);
+    #         $lib_name{$RLtmp_tbl[0]} = $RLtmp_tbl[1];
+    #         for ($i=2;$i<=$#RLtmp_tbl;$i=$i+2) {
+    #             $lib_correction{$RLtmp_tbl[0]}{$RLtmp_tbl[$i]} = $RLtmp_tbl[$i+1];
+    #             #print $RLtmp_tbl[0]," ",$lib_name{$RLtmp_tbl[0]}," ",$RLtmp_tbl[$i]," [",$lib_correction{$RLtmp_tbl[0]}{$RLtmp_tbl[$i]},"]\n";
+    #         }
+    #     }
+    # }
 }
 
 sub GetArgs {
@@ -220,9 +317,6 @@ sub GetArgs {
             $setup{'printlegend'} = 1;
 		} elsif ($arg eq '-i'){
 			$setup{'library'} = $ARG_LIST[$i+1];
-			$i++;
-		} elsif ($arg eq '-ii') {
-			$setup{'library_legend'} = $ARG_LIST[$i+1];
 			$i++;
 		} elsif ($arg eq '-o') {
             $setup{'output_file'} = $ARG_LIST[$i + 1];
@@ -240,7 +334,7 @@ sub GetArgs {
 				    if ($ARG_LIST[$j]=~/,/) {
 				        push(@{$setup{'item_list'}}, split(',',$ARG_LIST[$j],-1));
 				    } else {
-					    push(@{$setup{'item_list'}}, toUpper($ARG_LIST[$j]));
+					    push(@{$setup{'item_list'}}, $ARG_LIST[$j]);
 					}
 				}
 				if ($j==$#ARG_LIST) {
@@ -268,10 +362,6 @@ sub GetArgs {
         print "ERROR: $setup{'library'} library file does not exist. Exiting.\n";
         exit(1);
     }
-    if (! -e $setup{'library_legend'}) {
-        print "ERROR: $setup{'library_legend'} legend file does not exist. Exiting.\n";
-        exit(1);
-    }
 
     ReadLibrary();
 
@@ -297,12 +387,11 @@ By default data form Range Cards/Universal Reticle MRAD.txt are cut into
 Range Cards/hunt/range_card.txt file.
 
 Usage:
-       range_card_parser[.exe|.pl] <options> -c <optics/weapon list>
+       range_card_parser[.exe|.pl] <options> -c <CSV Weapon/Ammo/Optics list>
 
 Options:
-        -c : Calibre/optics/weapon index items for hunt
-        -i : Range Card library file [Universal Reticle MRAD.txt]
-        -ii: Range Card library legend file [Universal Reticle MRAD legend.txt]
+        -c : Weapon/Ammo/Optics items for hunt (comma separated)
+        -i : Range Card library file [data/Universal Reticle MRAD.txt]
         -o : Output range card file [hunt/range_card.txt]
         -l : Print optics/weapon combinations in library
         -rl: Range list for long ranges [150,175,200,225,250,275,300,325]
@@ -311,25 +400,60 @@ Options:
         -h : This help
 
 Example:
-        range_card_parser[.exe|.pl] -c "L1/.17HMR" "S2/CroPis"
-        range_card_parser[.exe|.pl] -c "M1/.17HMR" "S2/CroPis" "M1/6.5x55" -rl 150,200,300 -rs 20,40,60
+        range_card_parser[.exe|.pl] -c ".17LA/.17HMR/12x56" "CroPis/Arrow/2xCroPis"
+        range_card_parser[.exe|.pl] -c ".223BA/.223/5-22x56" "ParkerPython/Arrow/5pinPython" -rl 150,200,300 -rs 20,40,60
 
 XXX
 
 }
 
 sub PrintLibraryLegend {
-    my $PLfh;
-    my @PL_file;
-    open $PLfh,"<",$setup{'library_legend'} or die "ERROR: Cannot open library legend file (".$setup{'library_legend'}."). Exiting.";
-    @PL_file=<$PLfh>;
-    print "--- Library legend: ",$setup{'library_legend'},"\n";
-    print @PL_file;
-    close ($PLfh);
+    # my $PLfh;
+    # my @PL_file;
+    # open $PLfh,"<",$setup{'library_legend'} or die "ERROR: Cannot open library legend file (".$setup{'library_legend'}."). Exiting.";
+    # @PL_file=<$PLfh>;
+    # print "--- Library legend: ",$setup{'library_legend'},"\n";
+    # print @PL_file;
+    # close ($PLfh);
+    #
+    # my $itemlist="Available combinations: ".join(', ',sort keys %lib_name)."\n";
+    # my $wrap_length = 100;
+    # my $wrapped_itemlist;
+    # ($wrapped_itemlist = $itemlist) =~s/(.{0,$wrap_length}(?:\s|$))/$1\n/g;
+    # print $wrapped_itemlist;
 
-    my $itemlist="Available combinations: ".join(', ',sort keys %lib_name)."\n";
-    my $wrap_length = 100;
-    my $wrapped_itemlist;
-    ($wrapped_itemlist = $itemlist) =~s/(.{0,$wrap_length}(?:\s|$))/$1\n/g;
-    print $wrapped_itemlist;
+    my @tmp_pairs;
+    my $weapon;
+    my $ammo;
+    my $scope;
+
+    print "--- Library: ",$setup{'library'},"\n\n";
+
+    print "-- Scopes (id name):\n";
+    foreach $scope (sort keys %{$scopes}) {
+        printf("\t%-15s   %s\n", $scope,$scopes->{$scope}->{'name'});
+    };
+    print "\n";
+    print "-- Weapons (id name):\n";
+    foreach $weapon (sort keys %{$weapons}) {
+        printf ("\t%-15s   %s\n",$weapon,$weapons->{$weapon}->{'name'});
+    };
+    print "\n";
+
+    print "-- Sets (weapon/ammo/scope   ranges):\n";
+    my $corrections;
+    foreach $weapon (sort keys %{$weapons}) {
+        foreach $ammo (sort keys %{$weapons->{$weapon}->{'ammo'}}) {
+            foreach $scope (sort keys %{$weapons->{$weapon}->{'ammo'}->{$ammo}->{'scope'}}) {
+                $corrections=join(',',sort { $a <=> $b } keys %{$weapons->{$weapon}->{'ammo'}->{$ammo}->{'scope'}->{$scope}->{'correction'}});
+                push(@tmp_pairs,$weapon."/".$ammo."/".$scope,$corrections);
+            }
+
+        }
+    }
+    my $i;
+    for ($i=0;$i<=$#tmp_pairs;$i=$i+2) {
+        printf("\t%-35s    %s\n",$tmp_pairs[$i],$tmp_pairs[$i+1]);
+    }
+
 }
