@@ -5,7 +5,7 @@ use strict;
 use POSIX qw(strftime);
 use YAML::XS qw{LoadFile};
 
-my $version="1.1";
+my $version="1.2";
 
 my $today = strftime"%Y%m%d", localtime;
 my %setup=();
@@ -13,10 +13,12 @@ my $item;
 my $range;
 my @LongRangeLines;
 my @ShortRangeLines;
+my %DictIndexItem;
+my %DictItemIndex;
 my $z;
 my $weapons;
 my $scopes;
-
+my $error;
 
 # Defaults
 $setup{'library'} = 'data/Universal Reticle MRAD.yml';
@@ -27,8 +29,11 @@ $setup{'range_list_short'} = [10,20,30,40,50,60,80,100];
 $setup{'simulate'}=0;
 $setup{'printlegend'}=0;
 
+open $error,">&",\*STDERR or die "ERROR: Cannot write to STDERR. Exiting.";
+
+
 if ($#ARGV < 0) {
-    print "ERROR: No argument given (items/listing/help). Exiting.\n\n";
+    print {$error} "ERROR: No argument given (items/listing/help). Exiting.\n\n";
     PrintHelp();
     PrintLibraryContents();
     exit(1);
@@ -175,7 +180,7 @@ sub GetRange {
     my $GR_scope;
 
     if (length($GR_range) <1) {
-        print "ERROR: Calling GetRange with not enough arguments (",join(',',@GR_tmp),"). Exiting.\n";
+        print {$error} "ERROR: Calling GetRange with not enough arguments (",join(',',@GR_tmp),"). Exiting.\n";
         exit(1);
     } else {
         $GR_weapon = GetWeapon($GR_item);
@@ -194,7 +199,7 @@ sub SplitItem {
     my @SI_tbl;
     @SI_tbl=split('/',$SI_in);
     if ($#SI_tbl < 2) {
-        print "ERROR: SplitItems input missing elements (",$SI_in,"). Exiting.\n";
+        print {$error} "ERROR: SplitItems input missing elements (",$SI_in,"). Exiting.\n";
         exit(1);
     }
     return \@SI_tbl;
@@ -272,7 +277,6 @@ sub ItemCode {
 sub ItemName {
     my $IN_in=shift @_;
     my $IN_weapon=GetWeapon($IN_in);
-    #my @IN_tbl=split(' ',$weapons->{$IN_weapon}->{'abbrev'});
     my $IN_name=$weapons->{$IN_weapon}->{'abbrev'};
     $IN_name=~s/ //g;
     return " ".sprintf("%5s",substr($IN_name,0,5));
@@ -285,44 +289,46 @@ sub toUpper {
 }
 
 sub ReadLibrary {
-    # my $i;
-    # my @RLtmp_tbl;
-    # my $RLline;
-    # my $RLfh;
-
     my $yamlref=LoadFile($setup{'library'}) or die "ERROR: Cannot open library file (".$setup{'library'}."). Exiting.";
 
     $scopes=$yamlref->{'scope'};
     $weapons=$yamlref->{'weapon'};
     if (length($weapons) < 1 ) {
-        print "ERROR: No weapons in library (".$setup{'library'}."). Exiting.\n";
+        print {$error} "ERROR: No weapons in library (".$setup{'library'}."). Exiting.\n";
         exit(1);
     }
     if (length($scopes) < 1 ) {
-        print "ERROR: No scopes in library (".$setup{'library'}."). Exiting.\n";
+        print {$error} "ERROR: No scopes in library (".$setup{'library'}."). Exiting.\n";
         exit(1);
     }
 
-    # open $RLfh,$setup{'library'} or die "ERROR: Cannot open library file (".$setup{'library'}."). Exiting.";
-    # while ($RLline=<$RLfh>) {
-    #     @RLtmp_tbl=[];
-    #     $RLline=~tr/[\r\n]//d;
-    #     if ($RLline=~/,/){
-    #         @RLtmp_tbl=split(',',$RLline,-1);
-    #         $RLtmp_tbl[0]=toUpper($RLtmp_tbl[0]);
-    #         $lib_name{$RLtmp_tbl[0]} = $RLtmp_tbl[1];
-    #         for ($i=2;$i<=$#RLtmp_tbl;$i=$i+2) {
-    #             $lib_correction{$RLtmp_tbl[0]}{$RLtmp_tbl[$i]} = $RLtmp_tbl[$i+1];
-    #             #print $RLtmp_tbl[0]," ",$lib_name{$RLtmp_tbl[0]}," ",$RLtmp_tbl[$i]," [",$lib_correction{$RLtmp_tbl[0]}{$RLtmp_tbl[$i]},"]\n";
-    #         }
-    #     }
-    # }
+    BuildLibraryIndex();
 }
 
+sub BuildLibraryIndex {
+    my $weapon;
+    my $ammo;
+    my $scope;
+    my $i;
+    my $dict_item;
+
+    $i=1;
+    foreach $weapon (sort keys %{$weapons}) {
+        foreach $ammo (sort keys %{$weapons->{$weapon}->{'ammo'}}) {
+            foreach $scope (sort keys %{$weapons->{$weapon}->{'ammo'}->{$ammo}->{'scope'}}) {
+                $dict_item=$weapon."/".$ammo."/".$scope;
+                $DictIndexItem{$i}=$dict_item;
+                $DictItemIndex{$dict_item}=$i;
+                $i++;
+            }
+        }
+    }
+}
 sub GetArgs {
 	my @ARG_LIST=@ARGV;
 	my $arg;
 	my $i=0;
+    my @item_tbl;
     $setup{'show_all'}=0;
     $setup{'show_combinations'}=0;
     $setup{'show_weapons'}=0;
@@ -357,12 +363,8 @@ sub GetArgs {
 					$i=$j-1;
 					last;
 				} else {
-				    if ($ARG_LIST[$j]=~/,/) {
-				        push(@{$setup{'item_list'}}, split(',',$ARG_LIST[$j],-1));
-				    } else {
-					    push(@{$setup{'item_list'}}, $ARG_LIST[$j]);
-					}
-				}
+                    push(@item_tbl,$ARG_LIST[$j]);
+                }
 				if ($j==$#ARG_LIST) {
 					$i=$j;
 				}
@@ -374,18 +376,18 @@ sub GetArgs {
 		    @{$setup{'range_list_short'}} = split(',',$ARG_LIST[$i+1]);
 		    $i++;
 		} else {
-			print "ERROR: Unknown option ($arg). Exiting.\n";
+			print {$error} "ERROR: Unknown option ($arg). Exiting.\n";
 			PrintHelp();
 			exit(1);
 		}
     }
     # Basic library parameter tests
     if (!defined $setup{'library'}) {
-        print "ERROR: library and/ot library legend file not defined. Exiting.";
+        print {$error} "ERROR: library and/ot library legend file not defined. Exiting.";
         exit(1);
     }
     if (! -e $setup{'library'}) {
-        print "ERROR: $setup{'library'} library file does not exist. Exiting.\n";
+        print {$error} "ERROR: $setup{'library'} library file does not exist. Exiting.\n";
         exit(1);
     }
 
@@ -396,9 +398,58 @@ sub GetArgs {
         exit(0);
     }
 
-    # Input item parameter test
+    # Input item parameters processing and testing
+    if ($#item_tbl == -1) {
+        print {$error} "ERROR: Empty initial item list. Exiting.\n";
+        exit(1);
+    } else {
+        my $t;
+        for ($t = 0; $t <= $#item_tbl; $t++) {
+            my $arg_element;
+            my $item_candidate;
+            if ($item_tbl[$t] =~ /,/) {
+                my @tmp_item_tbl = split(',', $item_tbl[$t]);
+                foreach $arg_element (@tmp_item_tbl) {
+                    $item_candidate=ItemizeArg($arg_element);
+                    if (defined $DictItemIndex{$item_candidate}) {
+                        push(@{$setup{'item_list'}}, $item_candidate);
+                    } else {
+                        print {$error} "ERROR: Item $arg_element not in library. Omitting.\n";
+                    }
+                }
+            }
+            else {
+                $item_candidate=ItemizeArg($item_tbl[$t]);
+                if ($DictItemIndex{$item_candidate}) {
+                    push(@{$setup{'item_list'}}, $item_candidate);
+                } else {
+                    print {$error} "WARNING: Item $item_tbl[$t] not in library. Omitting.\n";
+                }
+            }
+        }
+    }
     if ($#{$setup{'item_list'}} == -1) {
-        print "ERROR: Empty item list. Exiting.";
+        print {$error} "ERROR: Empty final item list. Exiting.\n";
+        exit(1);
+    }
+}
+
+sub ItemizeArg {
+    my $IA_in=shift @_;
+    if ($IA_in=~/.+\/.+\/.+/) {
+        if ($DictItemIndex{$IA_in}) {
+            return $IA_in;
+        } else {
+            return "NONE";
+        }
+    } elsif ($IA_in=~/\d+/) {
+        if ($DictIndexItem{$IA_in}) {
+        return $DictIndexItem{$IA_in};
+    } else {
+            return "NONE";
+        }
+    } else {
+        print {$error} "ERROR: Unknown item format ($IA_in). Exiting.";
         exit(1);
     }
 }
@@ -416,7 +467,7 @@ Usage:
        range_card_parser[.exe|.pl] <options> -c <CSV Weapon/Ammo/Optics list>
 
 Options:
-        -c : Weapon/Ammo/Optics items for hunt (comma separated)
+        -c : Weapon/Ammo/Optics or items indexes (comma/space separated)
         -i : Range Card library file [data/Universal Reticle MRAD.yml]
         -o : Output range card file [hunt/range_card.txt]
         -l : Print all library content
@@ -431,6 +482,7 @@ Options:
 Example:
         range_card_parser[.exe|.pl] -c ".17LA/.17HMR/12x56" "CroPis/Arrow/2xCroPis"
         range_card_parser[.exe|.pl] -c ".223BA/.223/5-22x56" "ParkerPython/Arrow/5pinPython" -rl 150,200,300 -rs 20,40,60
+        range_card_parser[.exe|.pl] -c 1,2 28 ".223BA/.223/5-22x56" -rl 200,300 -rs 20,40,60
 
 XXX
 
@@ -501,7 +553,7 @@ sub PrintLibraryLegendCombinations {
     }
     my $i;
     for ($i=0;$i<=$#tmp_pairs;$i=$i+2) {
-        printf("\t%-35s    %s\n",$tmp_pairs[$i],$tmp_pairs[$i+1]);
+        printf("\t%2d  %-35s    %s\n",$DictItemIndex{$tmp_pairs[$i]},$tmp_pairs[$i],$tmp_pairs[$i+1]);
     }
     print "\n";
 }
