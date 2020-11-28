@@ -525,9 +525,14 @@ weapon:
           3x20Muzzle:
             ref: S1/.50G
             correction:
+              150: 0.10
+              175: 0.22
               200: 0.40
               225: 0.55
               250: 0.80
+              275: 1.00
+              300: 1.22
+              325: 1.55
   Tenpoint:
     name: Tenpoint Carbon Fusion Crossbow
     abbrev: TenPoint
