@@ -5,7 +5,7 @@ Structure:<br />
 <ul>
 <li>/Overlay Install - PlayClaw 5 software for testing (no license yet).
 <li>/Reticle Templates - Saved screenshots cleaned for initial reticle edition in GIMP.
-<li>/Simple Reticles - Oprics reticles with 150-300 range ticks added (max zoom is reference zoom).
+<li>/Simple Reticles - Optics reticles with 150-300 range ticks added (max zoom is reference zoom).
 <li>/Advanced Reticles - MRAD-like short/long (5-12MRAD vertical) reticle to use with range card.
 <li>/Range Cards - YAML file for different weapon setups (caliber + optics), final range card should be compiled from this library. 
 </ul>
@@ -20,5 +20,5 @@ Structure:<br />
 <li>When using advanced overlay (Universal Reticle), one can add Range card as Text overlay. Pick Text overlay, tick Text file, choose compiled range card with calibres for this hunt. Set font to Consola 11.
 <li>Enter Preview overlays and stretch Image overlay field to fit whole screen. Also setup Text overlay so it does not overlap with reticle field (ie. left top quarter).</li>
 <li>Enter the game. The overlay will be already visible in the Launcher dashboard. Disable overlay with hotkey and setup the game.
-<li>NOTE: Then swithing to/from game (ie. to change reticle) remember to disable overlay. Game gets unstable otherwise.
+<li>NOTE: Then switching to/from game (ie. to change reticle) remember to disable overlay. Game gets unstable otherwise.
 </ol>
