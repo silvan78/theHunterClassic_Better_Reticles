@@ -22,3 +22,27 @@ Structure:<br />
 <li>Enter the game. The overlay will be already visible in the Launcher dashboard. Disable overlay with hotkey and setup the game.
 <li>NOTE: Then swithing to/from game (ie. to change reticle) remember to disable overlay. Game gets unstable otherwise.
 </ol>
+
+<h3>Playclaw setup</h3>
+<ol>
+<li> Run Playclaw 5 (admin privs required), "Skip auto-update" + "Try"</li>
+<li> Remove all hotkeys, setup hotkey combination for global overlay (ie. Alt + P)</li>
+<li> Enter Plugins </li>
+<li> Remember to run Playclaw on screen where the actual game takes place</li>
+<li> Remember to set up resolution to 1920x1080, or user defined if playing >HD</li>
+<li> While working on overlay preview, user Ctrl + mouse scroll to see whole screen</li>
+<li> In Text plugin, setup plugin, point text file sources to hunt/range_card.txt</li>
+<li> In Text plugin, preview overlay, setup plugin windows in the left-top corner with size fitting at least 3 columns</li>
+<li> In Image plugin, setup plugin, point to source image (reticle of your choosing from proper screen resolution folder), avoid scaling</li>
+<li> In Image plugin, preview overlay, setup plugin windows to cover entire screen, it is important no to leave 1-2 px uncovered, as it leads to reticle alignment error</li>
+<li> Validate in game proper reticle placement.</li>
+</ol>
+
+<img src="thehunter-reticle-card.png" width=1024></img>
+
+
+
+
+
+
+
